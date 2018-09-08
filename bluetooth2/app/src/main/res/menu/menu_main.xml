@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/delete"
+        android:title="Delete"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+        <!--android:icon="@drawable/ic_launcher_background" -->
+
+    <item android:id="@+id/map"
+        android:title="Maze Map"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/settings"
+        android:title="Settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/edit"
+        android:title="Edit"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/Logout"
+        android:title="Logout"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>
