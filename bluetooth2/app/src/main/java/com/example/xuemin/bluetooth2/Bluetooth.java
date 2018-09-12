@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity{
-    private static final String TAG = "MainActivity";
+public class Bluetooth extends AppCompatActivity{
+    private static final String TAG = "Bluetooth";
     //////// Start of declaration for views
     //toolbar
     android.support.v7.widget.Toolbar toolbar;
@@ -69,15 +69,15 @@ public class MainActivity extends AppCompatActivity{
     //UUID for bluetooth serial connection
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-
+    
     // an array list of type bluetooth devices and hold the bluetooth devices that it discovers
     public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
     public ArrayList<BluetoothDevice> pairedBTDevices = new ArrayList<>();
     public DeviceListAdapter mDeviceListAdapter;
     public DeviceListAdapter pairedDeviceListAdapter;
 
-    BluetoothAdapter mBluetoothAdapter;
-    BluetoothDevice mBTDevice;
+    public static BluetoothAdapter mBluetoothAdapter;
+    public static BluetoothDevice mBTDevice;
     ////////End of Bluetooth variables
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -194,17 +194,17 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "onItemClick: deviceName = " + deviceName);
                 Log.d(TAG, "onItemClick: deviceAddress = " + deviceAddress);
 
-                Toast.makeText(MainActivity.this,"You clicked on " + deviceName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this,"You clicked on " + deviceName, Toast.LENGTH_SHORT).show();
 
                 //create the bond
                 //NOTE: Requires API 17+? I think this is JellyBean
                 if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
                     Log.d(TAG, "Trying to connect with " + deviceName);
-                    Toast.makeText(MainActivity.this,"Trying to connect with " + deviceName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Bluetooth.this,"Trying to connect with " + deviceName, Toast.LENGTH_SHORT).show();
                     mBTDevices.get(i).createBond();
                     //assign the bluetooth device to the device that we clicked on
                     mBTDevice = mBTDevices.get(i);
-                    mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
+                    mBluetoothConnection = new BluetoothConnectionService(Bluetooth.this);
 
                 }
             }
@@ -223,17 +223,17 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "onItemClick: deviceName = " + deviceName);
                 Log.d(TAG, "onItemClick: deviceAddress = " + deviceAddress);
 
-                Toast.makeText(MainActivity.this,"You clicked on " + deviceName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this,"You clicked on " + deviceName, Toast.LENGTH_SHORT).show();
 
                 //create the bond
                 //NOTE: Requires API 17+? I think this is JellyBean
                 if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2){
                     Log.d(TAG, "Trying to pair with " + deviceName);
-                    Toast.makeText(MainActivity.this,"Trying to connect with " + deviceName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Bluetooth.this,"Trying to connect with " + deviceName, Toast.LENGTH_SHORT).show();
                     pairedBTDevices.get(i).createBond();
                     //assign the bluetooth device to the device that we clicked on
                     mBTDevice = pairedBTDevices.get(i);
-                    mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
+                    mBluetoothConnection = new BluetoothConnectionService(Bluetooth.this);
                 }
             }
         });
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity{
             case R.id.bluetooth:
                 break;
             case R.id.map:
-                Intent intent1 = new Intent(MainActivity.this, MazeActivity.class);
+                Intent intent1 = new Intent(Bluetooth.this, MazeActivity.class);
                 startActivity(intent1);
                 break;
         }
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity{
     /* create method for starting connection, remember the connection will fail and app will crash if you havent paired first*/
     public void startConnection(){
         if(mBTDevice == null){
-            Toast.makeText(MainActivity.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Bluetooth.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
         }
         else{
             startBTConnection(mBTDevice,MY_UUID_INSECURE);
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity{
     /* starting chat service method */
     public void startBTConnection(BluetoothDevice device, UUID uuid){
         if(device == null){
-            Toast.makeText(MainActivity.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Bluetooth.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
         }
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection. ");
         mBluetoothConnection.startClient(device,uuid);
@@ -309,22 +309,22 @@ public class MainActivity extends AppCompatActivity{
                 switch(state){
                     case BluetoothAdapter.STATE_OFF:
                         Log.d(TAG,"onReceive: STATE OFF");
-                        Toast.makeText(MainActivity.this, "BT State Off", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT State Off", Toast.LENGTH_SHORT).show();
                         break;
 
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Log.d(TAG, "mBroadcastReceiver1: STATE TURNING OFF");
-                        Toast.makeText(MainActivity.this, "BT State Turning Off", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT State Turning Off", Toast.LENGTH_SHORT).show();
                         break;
 
                     case BluetoothAdapter.STATE_ON:
                         Log.d(TAG, "mBroadcastReceiver1: STATE ON");
-                        Toast.makeText(MainActivity.this, "BT State On", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT State On", Toast.LENGTH_SHORT).show();
                         break;
 
                     case BluetoothAdapter.STATE_TURNING_ON:
                         Log.d(TAG, "mBroadcastReceiver1: STATE TURNING ON");
-                        Toast.makeText(MainActivity.this, "BT State Turning On", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT State Turning On", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -345,22 +345,22 @@ public class MainActivity extends AppCompatActivity{
                     //device is in Discoverable Mode
                     case BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE:
                         Log.d(TAG,"mBroadcastReceiver2: Discoverability Enabled.");
-                        Toast.makeText(MainActivity.this, "Discoverability Enabled.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "Discoverability Enabled.", Toast.LENGTH_SHORT).show();
                         break;
                     //device is not in Discoverable Mode
                     case BluetoothAdapter.SCAN_MODE_CONNECTABLE:
                         Log.d(TAG, "mBroadcastReceiver2: Discoverability Disabled. Able to receive connections");
-                        Toast.makeText(MainActivity.this, "Discoverability Disabled. Able to receive connections", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "Discoverability Disabled. Able to receive connections", Toast.LENGTH_SHORT).show();
                         break;
 
                     case BluetoothAdapter.STATE_CONNECTING:
                         Log.d(TAG, "mBroadcastReceiver2: Connecting");
-                        Toast.makeText(MainActivity.this, "BT Connecting", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT Connecting", Toast.LENGTH_SHORT).show();
                         break;
 
                     case BluetoothAdapter.STATE_CONNECTED:
                         Log.d(TAG, "mBroadcastReceiver2: Connected");
-                        Toast.makeText(MainActivity.this, "BT Connected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bluetooth.this, "BT Connected", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity{
             else if(action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)){
                 // Indicate scanning in the title
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Discovery Finished", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "Discovery Finished", Toast.LENGTH_SHORT).show();
                 if (mDeviceListAdapter.getCount() == 0) {
                     noDevicesTV.setVisibility(View.VISIBLE);
                 }
@@ -439,11 +439,11 @@ public class MainActivity extends AppCompatActivity{
                     mBTDevice = mDevice;
                     Log.d(TAG, "Bluetooth Device bonded: " + mDevice.getName());
                     pairedBTDevices.add(mDevice);
-                    pairedDeviceListAdapter = new DeviceListAdapter(MainActivity.this, R.layout.device_adapter_view, pairedBTDevices);
+                    pairedDeviceListAdapter = new DeviceListAdapter(Bluetooth.this, R.layout.device_adapter_view, pairedBTDevices);
                     lvPairedDevices.setAdapter(pairedDeviceListAdapter);
 
                     mBTDevices.remove(mDevice);
-                    mDeviceListAdapter = new DeviceListAdapter(MainActivity.this, R.layout.device_adapter_view, mBTDevices);
+                    mDeviceListAdapter = new DeviceListAdapter(Bluetooth.this, R.layout.device_adapter_view, mBTDevices);
                     lvNewDevices.setAdapter(mDeviceListAdapter);
 
                 }
@@ -468,17 +468,17 @@ public class MainActivity extends AppCompatActivity{
             if(BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
-                Toast.makeText(MainActivity.this, "BT Connected to: "+ deviceName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "BT Connected to: "+ deviceName, Toast.LENGTH_SHORT).show();
             }
             else if(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)){
                 BluetoothDevice device1 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device1.getName();
-                Toast.makeText(MainActivity.this, "BT about to disconnected from: " + deviceName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "BT about to disconnected from: " + deviceName, Toast.LENGTH_SHORT).show();
             }
             else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 BluetoothDevice device2 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device2.getName();
-                Toast.makeText(MainActivity.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
                 startBTConnection(device2, MY_UUID_INSECURE);
             }
         }
@@ -518,7 +518,7 @@ public class MainActivity extends AppCompatActivity{
         //when the bluetooth is disabled
         if(!mBluetoothAdapter.isEnabled()){
             Log.d(TAG, "enableDisableBT: enabling BT.");
-            Toast.makeText(MainActivity.this, "Enabling Bluetooth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Bluetooth.this, "Enabling Bluetooth", Toast.LENGTH_SHORT).show();
             //using an intent to enable the bluetooth device
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_BLUETOOTH);
@@ -530,7 +530,7 @@ public class MainActivity extends AppCompatActivity{
         //when the bluetooth is enabled, we will disable the bluetooth
         if(mBluetoothAdapter.isEnabled()){
             Log.d(TAG, "enableDisableBT: disabling BT.");
-            Toast.makeText(MainActivity.this, "Disabling Bluetooth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Bluetooth.this, "Disabling Bluetooth", Toast.LENGTH_SHORT).show();
             mBluetoothAdapter.disable();
             //clearing the listview when it's off
             lvNewDevices.setAdapter(null);
@@ -570,20 +570,20 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "btnDiscover: Canceling discovery.");
 
                 mBluetoothAdapter.startDiscovery();
-                Toast.makeText(MainActivity.this, "Start Discovery", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
 
             if(!mBluetoothAdapter.isDiscovering()){
-                Toast.makeText(MainActivity.this, "Start Discovery", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 mBluetoothAdapter.startDiscovery();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
         }
         else{
-            Toast.makeText(MainActivity.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Bluetooth.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
         }
 
     }

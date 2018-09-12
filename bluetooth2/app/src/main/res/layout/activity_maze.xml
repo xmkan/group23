@@ -21,9 +21,15 @@
 
         <LinearLayout
             android:id="@+id/maze"
-            android:layout_width="450dp"
-            android:layout_height="660dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.example.xuemin.bluetooth2.PixelGridView
+                android:id="@+id/pixelGridView"
+                android:layout_width="440sp"
+                android:layout_height="662sp"
+                android:visibility="visible"/>
 
         </LinearLayout>
 
@@ -46,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text=""
+                android:text="No Status"
                 android:textSize="14sp"/>
 
 
@@ -62,9 +68,10 @@
             <TextView
                 android:id="@+id/fastestreceiveTV"
                 android:layout_width="match_parent"
-                android:layout_height="14sp"
+                android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text="" />
+                android:text=""
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/explorationTV"
@@ -78,9 +85,10 @@
             <TextView
                 android:id="@+id/explorationreceiveTV"
                 android:layout_width="match_parent"
-                android:layout_height="14sp"
+                android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text="" />
+                android:text=""
+                android:textSize="14sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,16 +138,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/setwaypointBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="SET WAYPOINT"
+            android:textSize="20dp"
+            android:onClick="setWayPoint" />
+
+        <Button
+            android:id="@+id/automanualBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setwaypointBtn"
+            android:text="AUTO"
+            android:textSize="20dp"
+            android:onClick="toggleAutoManual"/>
+
+        <Button
+            android:id="@+id/updateBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/automanualBtn"
+            android:text="UPDATE"
+            android:textSize="20dp"
+            android:enabled="false"/>
 
         <ImageButton
             android:id="@+id/leftBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_marginStart="227dp"
             android:background="@android:color/transparent"
-            android:padding="0dp"
-            android:src="@drawable/left"
-            android:onClick="turnLeft"/>
+            android:onClick="turnLeft"
+            android:paddingTop="10dp"
+            android:src="@drawable/left" />
 
         <ImageButton
             android:id="@+id/upBtn"
@@ -148,9 +183,9 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/leftBtn"
             android:background="@android:color/transparent"
-            android:padding="0dp"
-            android:src="@drawable/up"
-            android:onClick="forward"/>
+            android:onClick="forward"
+            android:paddingTop="10dp"
+            android:src="@drawable/up" />
 
         <ImageButton
             android:id="@+id/downBtn"
@@ -159,9 +194,9 @@
             android:layout_below="@+id/upBtn"
             android:layout_toEndOf="@+id/leftBtn"
             android:background="@android:color/transparent"
+            android:onClick="reverse"
             android:padding="0dp"
-            android:src="@drawable/down"
-            android:onClick="reverse"/>
+            android:src="@drawable/down" />
 
         <ImageButton
             android:id="@+id/rightBtn"
@@ -169,35 +204,29 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/downBtn"
             android:background="@android:color/transparent"
-            android:padding="0dp"
-            android:src="@drawable/right"
-            android:onClick="turnRight"/>
+            android:onClick="turnRight"
+            android:paddingTop="10dp"
+            android:src="@drawable/right" />
 
         <Button
-            android:id="@+id/setwaypointBtn"
+            android:id="@+id/explorationBtn"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/rightBtn"
+            android:layout_alignParentRight="true"
+            android:text="EXPLORATION"
             android:textSize="20dp"
-            android:text="SET WAYPOINT"/>
+            android:onClick="explore" />
 
         <Button
-        android:id="@+id/automanualBtn"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/rightBtn"
-        android:layout_below="@+id/setwaypointBtn"
-        android:textSize="20dp"
-        android:text=""/>
-
-        <Button
-            android:id="@+id/updateBtn"
+            android:id="@+id/fastestBtn"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/rightBtn"
-            android:layout_below="@+id/automanualBtn"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/explorationBtn"
+            android:text="FASTEST PATH"
             android:textSize="20dp"
-            android:text="UPDATE"/>
+            android:onClick="fastest" />
+
 
     </RelativeLayout>
 
