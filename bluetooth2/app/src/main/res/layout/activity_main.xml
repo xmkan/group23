@@ -40,8 +40,9 @@
 
     <TextView
         android:id="@+id/pairedTV"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/btnStartConnection"
         android:background="@android:color/darker_gray"
         android:text="Paired Devices"
@@ -59,16 +60,18 @@
         android:visibility="gone"/>
 
     <ListView
-        android:layout_below="@+id/pairedTV"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/lvPairedDevices"/>
+        android:id="@+id/lvPairedDevices"
+        android:layout_width="300dp"
+        android:layout_height="86dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pairedTV" />
 
     <TextView
         android:id="@+id/unpairedTV"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lvPairedDevices"
+        android:layout_below="@+id/btnONOFF"
+        android:layout_toEndOf="@+id/pairedTV"
         android:background="@android:color/darker_gray"
         android:text="Unpaired Devices"
         android:textColor="@android:color/black"
@@ -76,24 +79,28 @@
 
     <TextView
         android:id="@+id/noDevicesTV"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/unpairedTV"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/pairedTV"
         android:text="No Devices Found"
         android:textColor="@android:color/black"
         android:textSize="17sp"
         android:visibility="gone"/>
 
     <ListView
-        android:layout_below="@+id/unpairedTV"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/lvNewDevices"/>
+        android:id="@+id/lvNewDevices"
+        android:layout_width="300dp"
+        android:layout_height="87dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/pairedTV" />
+
     <Button
+        android:id="@+id/btnStartConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnFindUnpairedDevices"
-        android:id="@+id/btnStartConnection"
+        android:layout_below="@+id/toolbar"
+        android:layout_toEndOf="@+id/btnFindUnpairedDevices"
         android:text="Start Connection" />
 
     <ProgressBar
@@ -101,74 +108,81 @@
         android:layout_width="22dp"
         android:layout_height="27dp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/lvPairedDevices"
+        android:layout_below="@+id/btnONOFF"
         android:progress="25"
         android:visibility="gone"/>
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Enter Text Here"
-        android:layout_below="@+id/lvNewDevices"
-        android:layout_alignParentStart="true"
-        android:id="@+id/editText" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SEND"
-        android:id="@+id/btnSend"
-        android:layout_toRightOf="@+id/editText"
-        android:layout_below="@+id/lvNewDevices"
-        />
-
     <TextView
         android:id="@+id/incomingTV"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText"
-        android:background="@android:color/black"
-        android:text="Incoming Message"
-        android:textColor="@android:color/white"
+        android:layout_below="@+id/lvPairedDevices"
+        android:background="@android:color/darker_gray"
+        android:text="Received Text"
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
 
     <TextView
-        android:layout_marginTop="10dp"
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/incomingTV"
-        android:layout_alignParentStart="true"
         android:id="@+id/incomingMessage"
-        android:layout_alignParentEnd="true"
-        android:scrollbars="vertical"/>
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/incomingTV"
+        android:scrollbars="vertical"
+        android:text="" />
 
     <TextView
         android:id="@+id/outgoingTV"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/incomingMessage"
-        android:background="@android:color/black"
-        android:text="Outgoing Messages"
-        android:textColor="@android:color/white"
+        android:layout_toEndOf="@+id/incomingTV"
+        android:layout_below="@+id/lvPairedDevices"
+        android:background="@android:color/darker_gray"
+        android:text="Sent Text"
+        android:textColor="@android:color/black"
         android:textSize="20sp" />
 
     <TextView
+        android:id="@+id/outgoingMessage"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/incomingTV"
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/commandTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/incomingMessage"
+        android:background="@android:color/darker_gray"
+        android:text="Command Log"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/commandLogTV"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@+id/outgoingTV"
-        android:id="@+id/outgoingMessage"
-        android:scrollbars="vertical"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/commandTV"
+        android:scrollbars="vertical" />
+
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/commandLogTV"
+        android:hint="Enter Text Here" />
 
     <Button
-        android:id="@+id/btnMazeLayout"
+        android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/outgoingMessage"
-        android:onClick="btnRedirectToMaze"
-        android:text="To Maze Layout"
-        />
-
-
+        android:layout_alignTop="@+id/editText"
+        android:layout_toEndOf="@+id/editText"
+        android:text="SEND" />
 
 </RelativeLayout>

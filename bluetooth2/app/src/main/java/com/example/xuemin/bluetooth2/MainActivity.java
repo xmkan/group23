@@ -28,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import org.w3c.dom.Text;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Set;
@@ -35,41 +37,48 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
-
+    //////// Start of declaration for views
+    //toolbar
     android.support.v7.widget.Toolbar toolbar;
-
-    BluetoothAdapter mBluetoothAdapter;
-    Button btnEnableDisable_Discoverable;
-
-    BluetoothConnectionService mBluetoothConnection;
-
+    //buttons
     Button btnStartConnection;
     Button btnSend;
-
+    Button btnEnableDisable_Discoverable;
+    //textviews
     TextView incomingMessages;
     StringBuilder messages;
-    EditText etSend;
-
     TextView outgoingMessagesTV;
     StringBuilder outgoingMessages = new StringBuilder();
-
     TextView noDevicesTV;
     TextView noPairedTV;
+    TextView commandLogTV;
+    //edit text
+    EditText etSend;
+    //Listviews
+    ListView lvNewDevices;
+    ListView lvPairedDevices;
+    //ProgressBar
+    ProgressBar progressBar;
+    //////// End of declaration for views
 
+    ////////Start of Bluetooth variables
+    // i need to declare this as global variable so that the other activity can retrieve the same connection
+    //for calling method from BluetoothConnectionService class
+    public static BluetoothConnectionService mBluetoothConnection;
+
+    //UUID for bluetooth serial connection
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    //private String partnerDevAdd="14:AB:C5:8C:E4:F1";
 
-    BluetoothDevice mBTDevice;
-    BluetoothDevice mAutoBTDevice;
+
     // an array list of type bluetooth devices and hold the bluetooth devices that it discovers
     public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
-    public ArrayList<String> noDevice = new ArrayList<>();
     public ArrayList<BluetoothDevice> pairedBTDevices = new ArrayList<>();
     public DeviceListAdapter mDeviceListAdapter;
     public DeviceListAdapter pairedDeviceListAdapter;
-    ListView lvNewDevices;
-    ListView lvPairedDevices;
-    ProgressBar progressBar;
+
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothDevice mBTDevice;
+    ////////End of Bluetooth variables
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -118,6 +127,9 @@ public class MainActivity extends AppCompatActivity{
 
         outgoingMessagesTV = (TextView) findViewById(R.id.outgoingMessage);
         outgoingMessagesTV.setMovementMethod(new ScrollingMovementMethod());
+
+        commandLogTV = (TextView) findViewById(R.id.commandLogTV);
+        commandLogTV.setMovementMethod(new ScrollingMovementMethod());
 
         progressBar = (ProgressBar) findViewById(R.id.determinateBar);
 
@@ -240,13 +252,11 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         String msg =" ";
         switch(item.getItemId()){
-            case R.id.delete:
-                msg="deleted";
-                Toast.makeText(MainActivity.this,"Trying to connect with " + msg, Toast.LENGTH_SHORT).show();
+            case R.id.bluetooth:
                 break;
             case R.id.map:
-                Intent intent = new Intent(MainActivity.this, MazeActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(MainActivity.this, MazeActivity.class);
+                startActivity(intent1);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -254,10 +264,19 @@ public class MainActivity extends AppCompatActivity{
 
     /* create method for starting connection, remember the connection will fail and app will crash if you havent paired first*/
     public void startConnection(){
-        startBTConnection(mBTDevice,MY_UUID_INSECURE);
+        if(mBTDevice == null){
+            Toast.makeText(MainActivity.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            startBTConnection(mBTDevice,MY_UUID_INSECURE);
+        }
+
     }
     /* starting chat service method */
     public void startBTConnection(BluetoothDevice device, UUID uuid){
+        if(device == null){
+            Toast.makeText(MainActivity.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+        }
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection. ");
         mBluetoothConnection.startClient(device,uuid);
     }
@@ -271,6 +290,7 @@ public class MainActivity extends AppCompatActivity{
             messages.append(text + "\n");
 
             incomingMessages.setText(messages);
+
         }
     };
 
@@ -376,8 +396,7 @@ public class MainActivity extends AppCompatActivity{
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     if(pairedDevices.contains(device)){
                         //if paired devices is being found, then initiate connection
-                        //mAutoBTDevice = device;
-                        //startBTConnection(mBTDevice,MY_UUID_INSECURE);
+
                     }
                     else{
                         if(mBTDevices.contains(device)){
@@ -569,9 +588,4 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-
-    public void btnRedirectToMaze(View view) {
-        Intent intent = new Intent(this, MazeActivity.class);
-        startActivity(intent);
-    }
 }

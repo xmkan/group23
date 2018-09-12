@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:id="@+id/maze"
-            android:layout_width="495dp"
+            android:layout_width="450dp"
             android:layout_height="660dp"
             android:orientation="vertical">
 
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text="No Status"
+                android:text=""
                 android:textSize="14sp"/>
 
 
@@ -131,15 +131,15 @@
         android:layout_height="match_parent">
 
 
-
-
         <ImageButton
             android:id="@+id/leftBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:padding="0dp"
             android:src="@drawable/left"
-            android:padding="0dp"/>
+            android:onClick="turnLeft"/>
 
         <ImageButton
             android:id="@+id/upBtn"
@@ -147,27 +147,57 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/leftBtn"
+            android:background="@android:color/transparent"
             android:padding="0dp"
-            android:src="@drawable/up" />
+            android:src="@drawable/up"
+            android:onClick="forward"/>
 
         <ImageButton
-        android:id="@+id/downBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/upBtn"
-        android:layout_toEndOf="@+id/leftBtn"
-        android:padding="0dp"
-        android:src="@drawable/down" />
+            android:id="@+id/downBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/upBtn"
+            android:layout_toEndOf="@+id/leftBtn"
+            android:background="@android:color/transparent"
+            android:padding="0dp"
+            android:src="@drawable/down"
+            android:onClick="reverse"/>
 
         <ImageButton
             android:id="@+id/rightBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/downBtn"
+            android:background="@android:color/transparent"
             android:padding="0dp"
-            android:src="@drawable/right" />
+            android:src="@drawable/right"
+            android:onClick="turnRight"/>
 
+        <Button
+            android:id="@+id/setwaypointBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/rightBtn"
+            android:textSize="20dp"
+            android:text="SET WAYPOINT"/>
 
+        <Button
+        android:id="@+id/automanualBtn"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/rightBtn"
+        android:layout_below="@+id/setwaypointBtn"
+        android:textSize="20dp"
+        android:text=""/>
+
+        <Button
+            android:id="@+id/updateBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/rightBtn"
+            android:layout_below="@+id/automanualBtn"
+            android:textSize="20dp"
+            android:text="UPDATE"/>
 
     </RelativeLayout>
 
