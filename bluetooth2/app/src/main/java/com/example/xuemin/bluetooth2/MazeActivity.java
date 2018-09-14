@@ -172,8 +172,9 @@ public class MazeActivity extends AppCompatActivity {
             messages.append(text);
 
             if (text.equals("exploring") || text.equals("fastest path") || text.equals("turning left") ||
-                    text.equals("turning right") || text.equals("moving forward") || text.equals("reversing")) {
-                statusreceiveTV.setText(messages);
+                    text.equals("turning right") || text.equals("moving forward") || text.equals("reversing") || text.equals("stop")) {
+
+                statusreceiveTV.setText(messages.toString().toUpperCase());
 
 
             }

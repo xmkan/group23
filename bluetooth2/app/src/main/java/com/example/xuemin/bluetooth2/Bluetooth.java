@@ -37,6 +37,7 @@ import java.util.UUID;
 
 public class Bluetooth extends AppCompatActivity{
     private static final String TAG = "Bluetooth";
+    Boolean connectedStatus = false;
     //////// Start of declaration for views
     //toolbar
     android.support.v7.widget.Toolbar toolbar;
@@ -171,13 +172,19 @@ public class Bluetooth extends AppCompatActivity{
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                byte[] bytes = etSend.getText().toString().getBytes(Charset.defaultCharset());
-                mBluetoothConnection.write(bytes);
-                //display out going messages
-                outgoingMessages.append(etSend.getText() + "\n");
-                outgoingMessagesTV.setText(outgoingMessages);
+                if(connectedStatus == true){
+                    byte[] bytes = etSend.getText().toString().getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+                    //display out going messages
+                    outgoingMessages.append(etSend.getText() + "\n");
+                    outgoingMessagesTV.setText(outgoingMessages);
 
-                etSend.setText("");
+                    etSend.setText("");
+                }
+                else{
+                    Toast.makeText(Bluetooth.this, "Please connect to a device first!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -466,6 +473,7 @@ public class Bluetooth extends AppCompatActivity{
             final String action = intent.getAction();
 
             if(BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+                connectedStatus = true;
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
                 Toast.makeText(Bluetooth.this, "BT Connected to: "+ deviceName, Toast.LENGTH_SHORT).show();
@@ -476,6 +484,7 @@ public class Bluetooth extends AppCompatActivity{
                 Toast.makeText(Bluetooth.this, "BT about to disconnected from: " + deviceName, Toast.LENGTH_SHORT).show();
             }
             else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                connectedStatus = false;
                 BluetoothDevice device2 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device2.getName();
                 Toast.makeText(Bluetooth.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
