@@ -107,7 +107,15 @@ public class PixelGridView extends View {
             canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
         }
 
+
     }
+
+
+
+    public void setCellchecked(int x, int y){
+      cellChecked[x][y] = !cellChecked[x][y];
+      invalidate();
+  }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

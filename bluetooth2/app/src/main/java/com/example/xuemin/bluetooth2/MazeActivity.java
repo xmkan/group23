@@ -39,6 +39,11 @@ public class MazeActivity extends AppCompatActivity {
     BluetoothAdapter mBluetoothAdapter;
     public static TextView x_coor;
     public static TextView y_coor;
+    public static TextView arena;
+    TextView startX;
+    TextView startY;
+    Button setStart;
+
 
 
 
@@ -69,6 +74,12 @@ public class MazeActivity extends AppCompatActivity {
         statusreceiveTV = (TextView) findViewById(R.id.statusreceiveTV);
         x_coor = (TextView) findViewById(R.id.x_coor);
         y_coor = (TextView) findViewById(R.id.y_coor);
+        arena= (TextView)findViewById(R.id.arenainfo);
+
+        startX = findViewById(R.id.start_x);
+        startY = findViewById(R.id.start_y);
+        setStart = findViewById(R.id.setStartBtn);
+
 
         maze = (LinearLayout) findViewById(R.id.maze);
         maze.getViewTreeObserver().addOnGlobalLayoutListener(new MyGlobalListenerClass());
@@ -97,10 +108,15 @@ public class MazeActivity extends AppCompatActivity {
         String msg = " ";
         switch (item.getItemId()) {
             case R.id.bluetooth:
-                Intent intent = new Intent(this, Bluetooth.class);
-                startActivity(intent);
+                finish();
+               // Intent intent = new Intent(this, Bluetooth.class);
+                //startActivity(intent);
                 break;
             case R.id.map:
+                break;
+            case R.id.settings:
+                Intent intentSet= new Intent(this,Settings.class);
+                startActivity(intentSet);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -123,6 +139,19 @@ public class MazeActivity extends AppCompatActivity {
         if(text.equals("AUTO")){
             automanualBtn.setText("MANUAL");
             updateBtn.setEnabled(true);
+
+            updateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String update = "sendArena";
+                    byte[] bytes = update.getBytes(Charset.defaultCharset());
+                    Bluetooth.mBluetoothConnection.write(bytes);
+
+
+                }
+            });
+            LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
         }
         else{
             automanualBtn.setText("AUTO");
@@ -146,6 +175,17 @@ public class MazeActivity extends AppCompatActivity {
         }
 
     }
+
+    public void setStartPoint(View view){
+        String startpoint = "STARTPOINT(" + startX.getText() + "," + startY.getText() + ")";
+        int x = Integer.valueOf(startX.getText().toString());
+        int y = Integer.valueOf(startX.getText().toString());
+        byte[] bytes = startpoint.getBytes(Charset.defaultCharset());
+        Bluetooth.mBluetoothConnection.write(bytes);
+        pixelGridView.setCellchecked(x,y);
+
+    }
+
 
     class MyGlobalListenerClass implements ViewTreeObserver.OnGlobalLayoutListener{
         public void onGlobalLayout(){

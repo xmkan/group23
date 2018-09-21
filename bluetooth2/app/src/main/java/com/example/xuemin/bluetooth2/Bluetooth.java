@@ -265,6 +265,10 @@ public class Bluetooth extends AppCompatActivity{
                 Intent intent1 = new Intent(Bluetooth.this, MazeActivity.class);
                 startActivity(intent1);
                 break;
+            case R.id.settings:
+                Intent intentSet= new Intent(Bluetooth.this,Settings.class);
+                startActivity(intentSet);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
