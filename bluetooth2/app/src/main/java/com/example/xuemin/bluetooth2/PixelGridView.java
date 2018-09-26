@@ -14,6 +14,7 @@ public class PixelGridView extends View {
     private int totalWidth, totalHeight;
     private Paint blackPaint = new Paint();
     private boolean[][] cellChecked;
+    MapDecoder md = new MapDecoder();
 
     public PixelGridView(Context context) {
         this(context, null);
@@ -77,9 +78,11 @@ public class PixelGridView extends View {
 
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
+        int[][] testMap = md.decodeMapDescriptor();
 
         if (numColumns == 0 || numRows == 0) {
             return;
@@ -110,6 +113,29 @@ public class PixelGridView extends View {
 
     }
 
+    public void clearMap(){
+        md.clearMapArray();
+    }
+
+    public void wpShow(){
+        md.showWp();
+    }
+
+    public void wpHide(){
+        md.hideWp();
+    }
+
+    public void setWaypoint(int x,int y){
+        md.updateWaypoint(y,x);
+    }
+
+    public void updateArena(String exploredMap, String obstacleMap){
+        md.updateMapArray(exploredMap,obstacleMap);
+    }
+
+    public void updateRobotPos(String robotPos){
+        md.updateRobotPos(robotPos);
+    }
 
 
     public void setCellchecked(int x, int y){
@@ -123,7 +149,7 @@ public class PixelGridView extends View {
             int column = (int)(event.getX() / cellWidth);
             int row = (int)(event.getY() / cellHeight);
 
-            cellChecked[column][row] = !cellChecked[column][row];
+            //cellChecked[column][row] = !cellChecked[column][row];
             MazeActivity.setCoordinates(column,row);
             invalidate();
         }

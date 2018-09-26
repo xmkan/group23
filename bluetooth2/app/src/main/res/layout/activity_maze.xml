@@ -130,6 +130,13 @@
                     android:inputType="number" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/startBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:onClick="setStartPoint"/>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -142,9 +149,8 @@
             android:id="@+id/setwaypointBtn"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:text="SET WAYPOINT"
-            android:textSize="20dp"
-            android:onClick="setWayPoint" />
+            android:onClick="setWayPoint"
+            android:text="SET WAYPOINT" />
 
         <Button
             android:id="@+id/automanualBtn"
@@ -152,7 +158,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/setwaypointBtn"
             android:text="AUTO"
-            android:textSize="20dp"
             android:onClick="toggleAutoManual"/>
 
         <Button
@@ -161,7 +166,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/automanualBtn"
             android:text="UPDATE"
-            android:textSize="20dp"
             android:enabled="false"/>
 
         <ImageButton
@@ -214,7 +218,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="EXPLORATION"
-            android:textSize="20dp"
             android:onClick="explore" />
 
         <Button
@@ -224,8 +227,16 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/explorationBtn"
             android:text="FASTEST PATH"
-            android:textSize="20dp"
             android:onClick="fastest" />
+
+        <Button
+            android:id="@+id/clearMapBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/fastestBtn"
+            android:text="CLEAR MAP"
+            android:onClick="clear"/>
 
 
     </RelativeLayout>
