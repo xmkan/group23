@@ -28,6 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.xuemin.bluetooth2.PixelGridView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.nio.charset.Charset;
@@ -60,6 +64,8 @@ public class Bluetooth extends AppCompatActivity{
     ListView lvPairedDevices;
     //ProgressBar
     ProgressBar progressBar;
+
+
     //////// End of declaration for views
 
     ////////Start of Bluetooth variables
@@ -299,6 +305,8 @@ public class Bluetooth extends AppCompatActivity{
             String text = intent.getStringExtra("theMessage");
 
             messages.append(text + "\n");
+
+
 
             incomingMessages.setText(messages);
 

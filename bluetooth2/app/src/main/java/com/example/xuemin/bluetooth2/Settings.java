@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.nio.charset.Charset;
@@ -23,8 +24,8 @@ public class Settings extends AppCompatActivity {
 
     android.support.v7.widget.Toolbar toolbar;
     SharedPreferences sharedpreferences;
-    TextView function1;
-    TextView function2;
+    EditText function1;
+    EditText function2;
     TextView function1new;
     TextView function2new;
     Button btnSendF1;
@@ -123,14 +124,15 @@ public class Settings extends AppCompatActivity {
         String msg = " ";
         switch (item.getItemId()) {
             case R.id.bluetooth:
-                Intent intent = new Intent(this, Bluetooth.class);
-                startActivity(intent);
+                finish();
                 break;
             case R.id.map:
+                Intent intentSet= new Intent(this, MazeActivity.class);
+                startActivity(intentSet);
                 break;
             case R.id.settings:
-                Intent intentSet= new Intent(this, Settings.class);
-                startActivity(intentSet);
+                Intent intentSet2= new Intent(this, Settings.class);
+                startActivity(intentSet2);
                 break;
         }
         return super.onOptionsItemSelected(item);
