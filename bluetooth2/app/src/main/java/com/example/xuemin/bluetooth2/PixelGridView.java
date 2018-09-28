@@ -13,12 +13,22 @@ public class PixelGridView extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private int totalWidth, totalHeight;
+    private Paint whitePaint = new Paint();
     private Paint blackPaint = new Paint();
+<<<<<<< HEAD
+    private Paint bluePaint = new Paint();
+    private Paint redPaint = new Paint();
+    private Paint greenPaint = new Paint();
+    private Paint wpPaint = new Paint();
+    private Paint bodyPaint=new Paint();
+    private Paint headPaint = new Paint();
+=======
     private Paint whitePaint = new Paint();
     private Paint redPaint = new Paint();
     private Paint greenPaint = new Paint();
     private Paint robotPaint = new Paint();
     private Paint waypointPaint = new Paint();
+>>>>>>> b01a0b9d709ea02906e18078a980bafb0e2ebd1a
     private boolean[][] cellChecked;
     private boolean[][] startCellChecked;
     MapDecoder md = new MapDecoder();
@@ -30,6 +40,15 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+<<<<<<< HEAD
+        whitePaint.setColor(Color.WHITE);
+        bluePaint.setColor(Color.BLUE);
+        redPaint.setColor(Color.RED);
+        greenPaint.setColor(Color.GREEN);
+        headPaint.setColor(Color.MAGENTA);
+        wpPaint.setColor(Color.GRAY);
+        bodyPaint.setColor(Color.rgb(219,159,68));
+=======
         //blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         whitePaint.setColor(Color.WHITE);
         blackPaint.setColor(Color.BLACK);
@@ -37,6 +56,7 @@ public class PixelGridView extends View {
         greenPaint.setColor(Color.GREEN);
         robotPaint.setColor(Color.GRAY);
         waypointPaint.setColor(Color.BLUE);
+>>>>>>> b01a0b9d709ea02906e18078a980bafb0e2ebd1a
     }
     public void setTotalWidth(int totalWidth){
         this.totalWidth = totalWidth;
@@ -108,6 +128,44 @@ public class PixelGridView extends View {
         int halfWidth = cellWidth / 2;
         Path path = new Path();
 
+<<<<<<< HEAD
+=======
+        startCellChecked[0][6] = true;
+
+        for (int i = 0; i < numColumns; i++)
+        {
+            for (int j = 0; j < numRows ; j++)
+            {
+                if (testMap[j][i] == 0)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, whitePaint);
+                }
+                if (testMap[j][i] == 1)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
+                }
+                if (testMap[j][i] == 2)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, redPaint);
+                }
+                if (testMap[j][i] == 3)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, bodyPaint);
+                }
+                if (testMap[j][i] == 4)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, headPaint);
+                }
+                if(testMap[j][i] == 5){
+                   /* Drawable d = getResources().getDrawable(R.drawable.waypoint_icon);
+                    d.setBounds(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight);
+                    d.draw(canvas);*/
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, wpPaint);
+                }
+            }
+        }
+
+>>>>>>> edcc8bb7e7e073a7d75b337aa43a93642bc50b74
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
 
@@ -181,7 +239,11 @@ public class PixelGridView extends View {
 
                     /*canvas.drawRect(i * cellWidth, j * cellHeight,
                             (i + 1) * cellWidth, (j + 1) * cellHeight,
+<<<<<<< HEAD
+                            greenPaint);
+=======
                             blackPaint); */
+>>>>>>> b01a0b9d709ea02906e18078a980bafb0e2ebd1a
                 }
             }
         }
@@ -223,15 +285,25 @@ public class PixelGridView extends View {
 
 
     public void setCellchecked(int x, int y){
+
       cellChecked[x][y] = !cellChecked[x][y];
       invalidate();
   }
+    public void updateDemoArenaMap(String obstacleMapDes){
+        md.updateDemoMapArray(obstacleMapDes);
+    }
 
+<<<<<<< HEAD
+    public void updateDemoRobotPos(String robotPos){
+        md.updateDemoRobotPos(robotPos);
+    }
+=======
   public void setStartPoint(int x, int y){
       startCellChecked[x][y] = true;
       invalidate();
   }
 
+>>>>>>> b01a0b9d709ea02906e18078a980bafb0e2ebd1a
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
