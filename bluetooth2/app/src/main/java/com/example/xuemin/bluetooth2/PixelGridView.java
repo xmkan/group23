@@ -108,8 +108,6 @@ public class PixelGridView extends View {
         int halfWidth = cellWidth / 2;
         Path path = new Path();
 
-        startCellChecked[0][6] = true;
-
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
 
@@ -165,8 +163,6 @@ public class PixelGridView extends View {
                 }*/
 
                 if(startCellChecked[i][j]){
-                    int testcolumn = i + 1/2;
-                    int testrow = j + 1;
                     path.moveTo((i*cellWidth) + halfWidth, (j*cellHeight)); // Top
                     path.lineTo((i*cellWidth), (j*cellHeight) + cellHeight); // Bottom left
                     path.lineTo((i*cellWidth) + cellWidth, (j*cellHeight) + cellHeight); // Bottom right
@@ -176,12 +172,12 @@ public class PixelGridView extends View {
                 }
                 if (cellChecked[i][j]) {
 
-                    path.moveTo(i + halfWidth, j); // Top
+                    /*path.moveTo(i + halfWidth, j); // Top
                     path.lineTo(i, j + cellWidth); // Bottom left
                     path.lineTo(i + cellWidth, j + cellWidth); // Bottom right
                     path.lineTo(i + halfWidth, j); // Back to Top
                     path.close();
-                    canvas.drawPath(path, robotPaint);
+                    canvas.drawPath(path, robotPaint);*/
 
                     /*canvas.drawRect(i * cellWidth, j * cellHeight,
                             (i + 1) * cellWidth, (j + 1) * cellHeight,
@@ -243,7 +239,7 @@ public class PixelGridView extends View {
             int row = (int)(event.getY() / cellHeight);
 
             //cellChecked[column][row] = !cellChecked[column][row];
-            MazeActivity.setCoordinates(column,row);
+            MazeActivity.setCoordinates(column,19-row);
             invalidate();
         }
 
