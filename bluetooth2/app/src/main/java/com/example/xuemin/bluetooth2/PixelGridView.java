@@ -12,7 +12,14 @@ public class PixelGridView extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private int totalWidth, totalHeight;
+    private Paint whitePaint = new Paint();
     private Paint blackPaint = new Paint();
+    private Paint bluePaint = new Paint();
+    private Paint redPaint = new Paint();
+    private Paint greenPaint = new Paint();
+    private Paint wpPaint = new Paint();
+    private Paint bodyPaint=new Paint();
+    private Paint headPaint = new Paint();
     private boolean[][] cellChecked;
     MapDecoder md = new MapDecoder();
 
@@ -23,6 +30,13 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        whitePaint.setColor(Color.WHITE);
+        bluePaint.setColor(Color.BLUE);
+        redPaint.setColor(Color.RED);
+        greenPaint.setColor(Color.GREEN);
+        headPaint.setColor(Color.MAGENTA);
+        wpPaint.setColor(Color.GRAY);
+        bodyPaint.setColor(Color.rgb(219,159,68));
     }
     public void setTotalWidth(int totalWidth){
         this.totalWidth = totalWidth;
@@ -91,13 +105,46 @@ public class PixelGridView extends View {
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
 
+        for (int i = 0; i < numColumns; i++)
+        {
+            for (int j = 0; j < numRows ; j++)
+            {
+                if (testMap[j][i] == 0)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, whitePaint);
+                }
+                if (testMap[j][i] == 1)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
+                }
+                if (testMap[j][i] == 2)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, redPaint);
+                }
+                if (testMap[j][i] == 3)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, bodyPaint);
+                }
+                if (testMap[j][i] == 4)
+                {
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, headPaint);
+                }
+                if(testMap[j][i] == 5){
+                   /* Drawable d = getResources().getDrawable(R.drawable.waypoint_icon);
+                    d.setBounds(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight);
+                    d.draw(canvas);*/
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, wpPaint);
+                }
+            }
+        }
+
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
                 if (cellChecked[i][j]) {
 
                     canvas.drawRect(i * cellWidth, j * cellHeight,
                             (i + 1) * cellWidth, (j + 1) * cellHeight,
-                            blackPaint);
+                            greenPaint);
                 }
             }
         }
@@ -139,10 +186,17 @@ public class PixelGridView extends View {
 
 
     public void setCellchecked(int x, int y){
+
       cellChecked[x][y] = !cellChecked[x][y];
       invalidate();
   }
+    public void updateDemoArenaMap(String obstacleMapDes){
+        md.updateDemoMapArray(obstacleMapDes);
+    }
 
+    public void updateDemoRobotPos(String robotPos){
+        md.updateDemoRobotPos(robotPos);
+    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -150,7 +204,7 @@ public class PixelGridView extends View {
             int row = (int)(event.getY() / cellHeight);
 
             //cellChecked[column][row] = !cellChecked[column][row];
-            MazeActivity.setCoordinates(column,row);
+            MazeActivity.setCoordinates(column,19-row);
             invalidate();
         }
 

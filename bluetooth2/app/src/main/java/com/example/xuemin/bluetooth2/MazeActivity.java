@@ -24,6 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.xuemin.bluetooth2.PixelGridView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.nio.charset.Charset;
 import java.util.UUID;
 
@@ -44,6 +47,8 @@ public class MazeActivity extends AppCompatActivity {
     TextView startX;
     TextView startY;
     Button setStart;
+    public boolean isAutoUpdate = true;
+    public boolean listenForUpdate = false;
 
 
 
@@ -95,6 +100,12 @@ public class MazeActivity extends AppCompatActivity {
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         this.registerReceiver(mBroadcastReceiver5, filter2);
+        if(Bluetooth.mBTDevice !=null){
+            String update = "sendArena";
+            byte[] bytes = update.getBytes(Charset.defaultCharset());
+            Bluetooth.mBluetoothConnection.write(bytes);
+        }
+
 
     }
 
@@ -141,7 +152,8 @@ public class MazeActivity extends AppCompatActivity {
         if(text.equals("AUTO")){
             automanualBtn.setText("MANUAL");
             updateBtn.setEnabled(true);
-
+            isAutoUpdate = false;
+            listenForUpdate = true;
             updateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -155,6 +167,8 @@ public class MazeActivity extends AppCompatActivity {
         }
         else{
             automanualBtn.setText("AUTO");
+            isAutoUpdate = true;
+            listenForUpdate = false;
             updateBtn.setEnabled(false);
         }
     }
@@ -248,6 +262,7 @@ public class MazeActivity extends AppCompatActivity {
             messages = new StringBuilder();
             messages.append(text);
 
+
             if (text.equals("exploring") || text.equals("fastest path") || text.equals("turning left") ||
                     text.equals("turning right") || text.equals("moving forward") || text.equals("reversing") || text.equals("stop")) {
 
@@ -268,6 +283,29 @@ public class MazeActivity extends AppCompatActivity {
                 pixelGridView.updateArena(exploredMap,obstacleMap);
                 }
             }
+            byte[] read = text.getBytes();
+            String mpInfo = new String(read);
+            if (mpInfo.contains("grid")){
+                try{
+                    JSONObject obj = new JSONObject(mpInfo);
+                    String mpUp = obj.getString("grid");
+                    pixelGridView.updateDemoArenaMap(mpUp);
+                    pixelGridView.invalidate();
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+
+            if(mpInfo.contains("robotPosition")) {
+
+                //update robot position
+                pixelGridView.updateDemoRobotPos(mpInfo);
+                pixelGridView.invalidate();
+            }
+
         }
     };
 

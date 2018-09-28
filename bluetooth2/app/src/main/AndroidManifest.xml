@@ -26,6 +26,9 @@
         <activity android:name=".MazeActivity">
 
         </activity>
+        <activity android:name=".Settings">
+
+        </activity>
     </application>
 
 </manifest>

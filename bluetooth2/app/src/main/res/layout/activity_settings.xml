@@ -41,7 +41,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="118dp"
         android:ems="10"
-        android:onClick="getF1"
         android:hint="Function 1" />
 
     <EditText

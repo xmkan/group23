@@ -1,5 +1,11 @@
 package com.example.xuemin.bluetooth2;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MapDecoder {
     /*
      * Variable and constants
@@ -23,6 +29,38 @@ public class MapDecoder {
         robotPosStr = "-1,-1,-1";
         exploredMapStr = "0000000000000000000000000000000000000000000000000000000000000000000000000000";
         mapObjectStr = "0";
+    }
+
+    public void updateDemoMapArray(String obstacleMap){
+        //need to clear current map due to algorithm which ignores already explored cell
+        //robot position will remain the same
+        mapArray = new int[300];
+        exploredMapStr = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+        mapObjectStr = obstacleMap;
+    }
+
+    public void updateDemoRobotPos(String robotPos) {
+        //for AMDTool [col],[row] is used, we need to switch to [row],[col]
+        //also, the AMDTool reference the robot from the top left corner.
+        //we need to change it to the center of the robot by offsetting it by 1 in
+        //both the row and column.
+
+        JSONObject receive= null;
+        try {
+            receive = new JSONObject(robotPos);
+            JSONArray coor=receive.getJSONArray("robotPosition");
+            int x=coor.getInt(0);
+            int y=coor.getInt(1);
+            int direction=coor.getInt(2);
+
+            String tempStr = String.format("%s,%s,%s",
+                    y+1,x+1,direction);
+            Log.e("RobotPos",tempStr);
+            this.robotPosStr = tempStr;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void updateMapArray(String exploredMap,String obstacleMap){
