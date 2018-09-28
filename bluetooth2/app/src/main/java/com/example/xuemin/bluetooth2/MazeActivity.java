@@ -212,7 +212,8 @@ public class MazeActivity extends AppCompatActivity {
                     int y = Integer.valueOf(y_coor.getText().toString());
                     byte[] bytes = startpoint.getBytes(Charset.defaultCharset());
                     Bluetooth.mBluetoothConnection.write(bytes);
-                    pixelGridView.setCellchecked(x,y);
+                    pixelGridView.setStartPoint(x,y);
+                    //pixelGridView.setCellchecked(x,y);
                 }
                 else{
                     Toast.makeText(this, "Please connect to a device", Toast.LENGTH_SHORT).show();

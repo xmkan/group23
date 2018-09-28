@@ -202,7 +202,23 @@ public class MapDecoder {
             }
         }
 
-        if (robot[0]>0 && robot[0]<19 && robot[1]>0 && robot[1]<14){
+        switch (robot[2]){
+            case 0:
+                d2MapArray[robot[0]][robot[1]] = 3;
+                break;
+            case 90:
+                d2MapArray[robot[0]][robot[1]] = 4;
+                break;
+            case 180:
+                d2MapArray[robot[0]][robot[1]] = 5;
+                break;
+            case 270:
+                d2MapArray[robot[0]][robot[1]] = 6;
+                break;
+            default:
+                break;
+        }
+        /*if (robot[0]>0 && robot[0]<19 && robot[1]>0 && robot[1]<14){
 
             //set robot body
             d2MapArray[robot[0]+1][robot[1]-1] = 3;
@@ -233,10 +249,10 @@ public class MapDecoder {
                 default:
                     break;
             }
-        }
+        }*/
 
         if(wpSet==true)
-            d2MapArray[19-waypoint[1]][waypoint[0]] = 5;
+            d2MapArray[19-waypoint[1]][waypoint[0]] = 7;
 
         //invert row
         int[][] invertd2MapArray = new int[20][15];
