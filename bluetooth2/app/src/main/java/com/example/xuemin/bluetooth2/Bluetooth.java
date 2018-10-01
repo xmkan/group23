@@ -247,6 +247,7 @@ public class Bluetooth extends AppCompatActivity{
                     //assign the bluetooth device to the device that we clicked on
                     mBTDevice = pairedBTDevices.get(i);
                     mBluetoothConnection = new BluetoothConnectionService(Bluetooth.this);
+                    startConnection();
                 }
             }
         });
@@ -603,7 +604,7 @@ public class Bluetooth extends AppCompatActivity{
         IntentFilter intentFilter = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         registerReceiver(mBroadcastReceiver2,intentFilter);
     }
-/*
+
     // for Button : btnFindUnpairedDevices
     public void btnDiscover(View view) {
         if(mBluetoothAdapter.isEnabled()){
@@ -632,6 +633,6 @@ public class Bluetooth extends AppCompatActivity{
             Toast.makeText(Bluetooth.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
         }
 
-    }*/
+    }
 
 }

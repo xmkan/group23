@@ -26,7 +26,7 @@ public class MapDecoder {
 
     public void clearMapArray(){
         mapArray = new int[300];
-        robotPosStr = "-1,-1,-1";
+        robotPosStr = "1,1,180";
         exploredMapStr = "0000000000000000000000000000000000000000000000000000000000000000000000000000";
         mapObjectStr = "0";
     }
@@ -127,7 +127,7 @@ public class MapDecoder {
         //String coordString = robotPosStr.substring(2);
         int [] coord = new int[3];
         String[] coordArr = robotPosStr.split(",");
-        coord[0] = 19-Integer.parseInt(coordArr[0].trim()); //y
+        coord[0] = Integer.parseInt(coordArr[0].trim()); //y
         coord[1] = Integer.parseInt(coordArr[1].trim()); //x
         coord[2] = Integer.parseInt(coordArr[2].trim()); //orientation
 
@@ -240,22 +240,22 @@ public class MapDecoder {
             }
         }
 
-        switch (robot[2]){
+        /*switch (robot[2]){
             case 0:
-                d2MapArray[robot[0]][robot[1]] = 3;
-                break;
-            case 90:
                 d2MapArray[robot[0]][robot[1]] = 4;
                 break;
-            case 180:
+            case 90:
                 d2MapArray[robot[0]][robot[1]] = 5;
                 break;
-            case 270:
+            case 180:
                 d2MapArray[robot[0]][robot[1]] = 6;
+                break;
+            case 270:
+                d2MapArray[robot[0]][robot[1]] = 7;
                 break;
             default:
                 break;
-        }
+        }*/
         if (robot[0]>0 && robot[0]<19 && robot[1]>0 && robot[1]<14){
 
             //set robot body
@@ -290,7 +290,7 @@ public class MapDecoder {
         }
 
         if(wpSet==true)
-            d2MapArray[19-waypoint[1]][waypoint[0]] = 7;
+            d2MapArray[waypoint[1]][waypoint[0]] = 8;
 
         //invert row
         int[][] invertd2MapArray = new int[20][15];
