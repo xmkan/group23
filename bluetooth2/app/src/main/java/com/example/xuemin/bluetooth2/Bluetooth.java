@@ -251,6 +251,31 @@ public class Bluetooth extends AppCompatActivity{
             }
         });
 
+        if(mBluetoothAdapter.isEnabled()){
+            Log.d(TAG, "btnDiscover: Looking for unpaired devices.");
+            // Indicate scanning in the title
+            progressBar.setVisibility(View.VISIBLE);
+
+            if(mBluetoothAdapter.isDiscovering()){
+                mBluetoothAdapter.cancelDiscovery();
+                Log.d(TAG, "btnDiscover: Canceling discovery.");
+
+                mBluetoothAdapter.startDiscovery();
+                Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
+                IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+            }
+
+            if(!mBluetoothAdapter.isDiscovering()){
+                Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
+                mBluetoothAdapter.startDiscovery();
+                IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+            }
+        }
+        else{
+            Toast.makeText(Bluetooth.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -578,7 +603,7 @@ public class Bluetooth extends AppCompatActivity{
         IntentFilter intentFilter = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         registerReceiver(mBroadcastReceiver2,intentFilter);
     }
-
+/*
     // for Button : btnFindUnpairedDevices
     public void btnDiscover(View view) {
         if(mBluetoothAdapter.isEnabled()){
@@ -607,6 +632,6 @@ public class Bluetooth extends AppCompatActivity{
             Toast.makeText(Bluetooth.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
         }
 
-    }
+    }*/
 
 }

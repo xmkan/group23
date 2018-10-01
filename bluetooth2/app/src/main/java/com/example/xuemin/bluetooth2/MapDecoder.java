@@ -50,7 +50,7 @@ public class MapDecoder {
             receive = new JSONObject(robotPos);
             JSONArray coor=receive.getJSONArray("robotPosition");
             int x=coor.getInt(0);
-            int y=coor.getInt(1);
+            int y=19-coor.getInt(1);
             int direction=coor.getInt(2);
 
             String tempStr = String.format("%s,%s,%s",
