@@ -281,7 +281,7 @@ public class MazeActivity extends AppCompatActivity {
 
             }
             String text1 = automanualBtn.getText().toString();
-            // receive format MDF|current_y|current_x|robotfacing|goal_y|goal_x|exploredStr|obstacleStr
+            // receive format MDF|current_y|current_x|robotfacing|exploredStr|obstacleStr
             if(text.contains("MDF")){
                 String grid[] = text.split("\\|");
                 String position = grid[1]+"|"+grid[2]+"|"+grid[3];
@@ -355,27 +355,48 @@ public class MazeActivity extends AppCompatActivity {
     };
 
         public void turnLeft(View view) {
-            String left = "tl";
-            byte[] bytes = left.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(Bluetooth.mBTDevice != null){
+                String left = "tl";
+                byte[] bytes = left.getBytes(Charset.defaultCharset());
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         public void forward(View view) {
-            String forward = "f";
-            byte[] bytes = forward.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(Bluetooth.mBTDevice != null){
+                String forward = "f";
+                byte[] bytes = forward.getBytes(Charset.defaultCharset());
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
+            else {
+                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            }
         }
 
         public void reverse(View view) {
-            String reverse = "r";
-            byte[] bytes = reverse.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(Bluetooth.mBTDevice != null){
+                String reverse = "r";
+                byte[] bytes = reverse.getBytes(Charset.defaultCharset());
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
+            else {
+                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            }
         }
 
         public void turnRight(View view) {
-            String right = "tr";
-            byte[] bytes = right.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(Bluetooth.mBTDevice != null){
+                String right = "tr";
+                byte[] bytes = right.getBytes(Charset.defaultCharset());
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
+            else {
+                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            }
         }
 
 }

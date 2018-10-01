@@ -256,7 +256,7 @@ public class MapDecoder {
             default:
                 break;
         }
-        /*if (robot[0]>0 && robot[0]<19 && robot[1]>0 && robot[1]<14){
+        if (robot[0]>0 && robot[0]<19 && robot[1]>0 && robot[1]<14){
 
             //set robot body
             d2MapArray[robot[0]+1][robot[1]-1] = 3;
@@ -287,7 +287,7 @@ public class MapDecoder {
                 default:
                     break;
             }
-        }*/
+        }
 
         if(wpSet==true)
             d2MapArray[19-waypoint[1]][waypoint[0]] = 7;

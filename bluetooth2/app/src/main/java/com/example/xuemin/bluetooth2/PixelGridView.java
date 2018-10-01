@@ -27,6 +27,7 @@ public class PixelGridView extends View {
     private Paint redPaint = new Paint();
     private Paint greenPaint = new Paint();
     private Paint robotPaint = new Paint();
+    private Paint robotbackPaint = new Paint();
     private Paint waypointPaint = new Paint();
 
     private boolean[][] cellChecked;
@@ -55,6 +56,7 @@ public class PixelGridView extends View {
         redPaint.setColor(Color.RED);
         greenPaint.setColor(Color.GREEN);
         robotPaint.setColor(Color.GRAY);
+        robotbackPaint.setColor(Color.DKGRAY);
         waypointPaint.setColor(Color.BLUE);
 
     }
@@ -128,16 +130,15 @@ public class PixelGridView extends View {
         int halfWidth = cellWidth / 2;
         Path path = new Path();
 
-        startCellChecked[0][6] = true;
+        startCellChecked[13][2] = true;
 
-        for (int i = 0; i < numColumns; i++)
-        {
-            for (int j = 0; j < numRows ; j++)
-            {
-                if (testMap[j][i] == 0)
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+
+                /*if (testMap[j][i] == 0)
                 {
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, whitePaint);
-                }
+                }*/
                 if (testMap[j][i] == 1)
                 {
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
@@ -148,46 +149,9 @@ public class PixelGridView extends View {
                 }
                 if (testMap[j][i] == 3)
                 {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, robotPaint);
+                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, robotbackPaint);
                 }
-                if (testMap[j][i] == 4)
-                {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, robotPaint);
-                }
-                if(testMap[j][i] == 5){
-                   /* Drawable d = getResources().getDrawable(R.drawable.waypoint_icon);
-                    d.setBounds(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight);
-                    d.draw(canvas);*/
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, waypointPaint);
-                }
-            }
-        }
-
-
-        for (int i = 0; i < numColumns; i++) {
-            for (int j = 0; j < numRows; j++) {
-
-                if (testMap[j][i] == 0)
-                {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, whitePaint);
-                }
-                if (testMap[j][i] == 1)
-                {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
-                }
-                if (testMap[j][i] == 2)
-                {
-                    canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, redPaint);
-                }
-                /*if (testMap[j][i] == 3)
-                {
-                    path.moveTo(i + halfWidth, j); // Top
-                    path.lineTo(i, j + width); // Bottom left
-                    path.lineTo(i + width, j + width); // Bottom right
-                    path.lineTo(i + halfWidth, j); // Back to Top
-                    path.close();
-                    canvas.drawPath(path, robotPaint);
-                }
+                /*
                 if (testMap[j][i] == 4)
                 {
                     path.moveTo(j + width, i + halfWidth); // Top
@@ -219,12 +183,22 @@ public class PixelGridView extends View {
                 }*/
 
                 if(startCellChecked[i][j]){
-                    path.moveTo((i*cellWidth) + halfWidth, (j*cellHeight)); // Top
+                    if (i > 0 && i < 14 && j > 0 && j < 19) {
+                        path.moveTo((i*cellWidth) + halfWidth, (j*cellHeight) - cellHeight); // Top
+                        path.lineTo((i*cellWidth) - cellWidth, (j*cellHeight) + (2*cellHeight)); // Bottom left
+                        path.lineTo((i*cellWidth) + (2*cellWidth), (j*cellHeight) + (2*cellHeight)); // Bottom right
+                        path.lineTo((i*cellWidth) + halfWidth, (j*cellHeight) - cellHeight); // Back to Top
+                        path.close();
+                        canvas.drawPath(path, robotPaint);
+                    }
+                   /* path.moveTo((i*cellWidth) + halfWidth, (j*cellHeight)); // Top
                     path.lineTo((i*cellWidth), (j*cellHeight) + cellHeight); // Bottom left
                     path.lineTo((i*cellWidth) + cellWidth, (j*cellHeight) + cellHeight); // Bottom right
                     path.lineTo((i*cellWidth) + halfWidth, (j*cellHeight)); // Back to Top
                     path.close();
-                    canvas.drawPath(path, robotPaint);
+                    canvas.drawPath(path, robotPaint);*/
+
+
                 }
                 if (cellChecked[i][j]) {
 
