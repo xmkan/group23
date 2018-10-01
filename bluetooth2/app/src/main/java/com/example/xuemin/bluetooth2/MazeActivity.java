@@ -49,6 +49,9 @@ public class MazeActivity extends AppCompatActivity {
     Button setStart;
     public boolean isAutoUpdate = true;
     public boolean listenForUpdate = false;
+    private String storedMsg;
+    private String storedInfo;
+
 
 
 
@@ -100,11 +103,13 @@ public class MazeActivity extends AppCompatActivity {
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         this.registerReceiver(mBroadcastReceiver5, filter2);
-        if(Bluetooth.mBTDevice !=null){
-            String update = "sendArena";
-            byte[] bytes = update.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
-        }
+      // if(Bluetooth.mBTDevice !=null){
+            //String update = "sendArena";
+            //byte[] bytes = update.getBytes(Charset.defaultCharset());
+           // Bluetooth.mBluetoothConnection.write(bytes);
+
+        //}
+
 
 
     }
@@ -148,12 +153,12 @@ public class MazeActivity extends AppCompatActivity {
     }
 
     public void toggleAutoManual(View view) {
-        String text = automanualBtn.getText().toString();
+       String text = automanualBtn.getText().toString();
         if(text.equals("AUTO")){
             automanualBtn.setText("MANUAL");
             updateBtn.setEnabled(true);
             isAutoUpdate = false;
-            listenForUpdate = true;
+
             updateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -161,6 +166,10 @@ public class MazeActivity extends AppCompatActivity {
                     String update = "sendArena";
                     byte[] bytes = update.getBytes(Charset.defaultCharset());
                     Bluetooth.mBluetoothConnection.write(bytes);
+                    listenForUpdate = true;
+                    if(storedMsg!=null){
+                        pixelGridView.updateDemoRobotPos(storedMsg);
+                    }
                 }
             });
             LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
@@ -287,24 +296,31 @@ public class MazeActivity extends AppCompatActivity {
             byte[] read = text.getBytes();
             String mpInfo = new String(read);
             if (mpInfo.contains("grid")){
-                try{
-                    JSONObject obj = new JSONObject(mpInfo);
-                    String mpUp = obj.getString("grid");
-                    pixelGridView.updateDemoArenaMap(mpUp);
-                    pixelGridView.invalidate();
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
+                if(isAutoUpdate==true || listenForUpdate==true) {
+                    try {
+                        JSONObject obj = new JSONObject(mpInfo);
+                        String mpUp = obj.getString("grid");
+                        pixelGridView.updateDemoArenaMap(mpUp);
+                        pixelGridView.invalidate();
+                        listenForUpdate=false;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
 
+                    }
                 }
 
             }
 
             if(mpInfo.contains("robotPosition")) {
-
-                //update robot position
-                pixelGridView.updateDemoRobotPos(mpInfo);
-                pixelGridView.invalidate();
+                if (isAutoUpdate == true || listenForUpdate == true) {
+                    //update robot position
+                    pixelGridView.updateDemoRobotPos(mpInfo);
+                    pixelGridView.invalidate();
+                    listenForUpdate=false;
+                }
+                else{
+                    storedMsg=mpInfo;
+                }
             }
 
         }
