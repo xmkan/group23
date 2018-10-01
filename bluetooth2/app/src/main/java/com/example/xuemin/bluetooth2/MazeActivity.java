@@ -44,6 +44,7 @@ public class MazeActivity extends AppCompatActivity {
     BluetoothAdapter mBluetoothAdapter;
     public static TextView x_coor;
     public static TextView y_coor;
+    TextView btConnectedTVList;
     public static TextView arena;
     TextView startX;
     TextView startY;
@@ -85,6 +86,7 @@ public class MazeActivity extends AppCompatActivity {
         statusreceiveTV = (TextView) findViewById(R.id.statusreceiveTV);
         x_coor = (TextView) findViewById(R.id.x_coor);
         y_coor = (TextView) findViewById(R.id.y_coor);
+        btConnectedTVList = (TextView) findViewById(R.id.btConnectedTVList);
         //arena= (TextView)findViewById(R.id.arenainfo);
 
         //startX = findViewById(R.id.start_x);
@@ -104,6 +106,13 @@ public class MazeActivity extends AppCompatActivity {
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
         filter2.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         this.registerReceiver(mBroadcastReceiver5, filter2);
+        // to display connected bluetooth device
+        if(Bluetooth.mBTDevice != null){
+            btConnectedTVList.setText(Bluetooth.mBTDevice.getName());
+        }
+        else{
+            btConnectedTVList.setText("Not Connected");
+        }
 
       // if(Bluetooth.mBTDevice !=null){
             //String update = "sendArena";

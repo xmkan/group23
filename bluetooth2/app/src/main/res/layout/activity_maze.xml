@@ -37,15 +37,32 @@
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/btConnectedTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="BT Connected"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
-            android:id="@+id/statusTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
-            android:text="Status"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+                android:id="@+id/btConnectedTVList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text=""
+                android:textSize="14sp"/>
+
+
+            <TextView
+                android:id="@+id/statusTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Status"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/statusreceiveTV"
