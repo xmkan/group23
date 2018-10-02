@@ -400,8 +400,8 @@ public class MazeActivity extends AppCompatActivity {
                 if(text1.equals("AUTO")){
                 robot.setPosition(Integer.parseInt(grid[2]), Integer.parseInt(grid[1]));
                 robot.setDirection(grid[3]);
-                String  exploredMap = grid[5];
-                String obstacleMap = grid[6];
+                String  exploredMap = grid[4];
+                String obstacleMap = grid[5];
                 pixelGridView.updateRobotPos(position);
                 pixelGridView.updateArena(exploredMap,obstacleMap);
                 }
