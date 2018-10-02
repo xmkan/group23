@@ -103,9 +103,9 @@
                 android:id="@+id/explorationreceiveTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text=""
-                android:textSize="14sp"/>
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,8 +234,8 @@
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="EXPLORATION"
-            android:onClick="explore" />
+            android:onClick="explore"
+            android:text="EXPLORATION" />
 
         <Button
             android:id="@+id/fastestBtn"

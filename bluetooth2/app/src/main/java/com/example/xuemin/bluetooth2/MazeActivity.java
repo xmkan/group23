@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,16 +36,23 @@ public class MazeActivity extends AppCompatActivity {
     BluetoothConnectionService bluetoothConnectionService;
     android.support.v7.widget.Toolbar toolbar;
     ImageButton upButton;
+    ImageButton downBtn;
+    ImageButton rightBtn;
+    ImageButton leftBtn;
     PixelGridView pixelGridView;
     Robot robot;
     LinearLayout maze;
     Button automanualBtn;
     Button updateBtn;
     Button startBtn;
+    Button explorationBtn;
+    Button fastestBtn;
     BluetoothAdapter mBluetoothAdapter;
     public static TextView x_coor;
     public static TextView y_coor;
     TextView btConnectedTVList;
+    TextView fastestreceiveTV;
+    TextView explorationreceiveTV;
     public static TextView arena;
     TextView startX;
     TextView startY;
@@ -53,9 +61,11 @@ public class MazeActivity extends AppCompatActivity {
     public boolean listenForUpdate = false;
     private String storedMsg;
     private String storedInfo;
-
-
-
+    // variables for timer
+    long startExploreTime = 0;
+    long startFastTime =0;
+    private boolean stillExplore = false;
+    private boolean stillFast = false;
 
 
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -69,6 +79,7 @@ public class MazeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maze);
 
+        robot = new Robot(1,1,"NORTH");
         //initializing bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -76,17 +87,25 @@ public class MazeActivity extends AppCompatActivity {
         //over write the tool bar title
         // toolbar.setTitle("Robot 23");
         setSupportActionBar(toolbar);
-
+        //direction buttons
         upButton = (ImageButton) findViewById(R.id.upBtn);
+        downBtn = (ImageButton) findViewById(R.id.downBtn);
+        rightBtn = (ImageButton) findViewById(R.id.rightBtn);
+        leftBtn = (ImageButton) findViewById(R.id.leftBtn);
 
         automanualBtn = (Button) findViewById(R.id.automanualBtn);
         updateBtn = (Button) findViewById(R.id.updateBtn);
         startBtn = (Button) findViewById(R.id.startBtn);
+        explorationBtn = (Button) findViewById(R.id.explorationBtn);
+        fastestBtn = (Button) findViewById(R.id.fastestBtn);
 
         statusreceiveTV = (TextView) findViewById(R.id.statusreceiveTV);
         x_coor = (TextView) findViewById(R.id.x_coor);
         y_coor = (TextView) findViewById(R.id.y_coor);
         btConnectedTVList = (TextView) findViewById(R.id.btConnectedTVList);
+        fastestreceiveTV = (TextView) findViewById(R.id.fastestreceiveTV);
+        explorationreceiveTV = (TextView) findViewById(R.id.explorationreceiveTV);
+
         //arena= (TextView)findViewById(R.id.arenainfo);
 
         //startX = findViewById(R.id.start_x);
@@ -152,15 +171,90 @@ public class MazeActivity extends AppCompatActivity {
     }
 
     public void explore(View view) {
-        String left = "beginExplore";
-        byte[] bytes = left.getBytes(Charset.defaultCharset());
-        Bluetooth.mBluetoothConnection.write(bytes);
+        if(Bluetooth.mBTDevice != null){
+            String explore = "beginExplore";
+            byte[] bytes = explore.getBytes(Charset.defaultCharset());
+            Bluetooth.mBluetoothConnection.write(bytes);
+            stillExplore = true;
+            startExploreTime = System.currentTimeMillis();
+            timerHandlerExplore.postDelayed(timerRunnableExplore, 0);
+            explorationBtn.setEnabled(false);
+            disableDirection();
+        }
+        else{
+            Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
+    // Handler for exploration timer function
+    Handler timerHandlerExplore = new Handler();
+    Runnable timerRunnableExplore = new Runnable() {
+        @Override
+        public void run() {
+            if(!stillExplore){
+                return;
+            }
+            long millis = System.currentTimeMillis() - startExploreTime;
+            int seconds = (int) (millis / 1000.0);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            explorationreceiveTV.setText("Min : Seconds " + String.format("%d:%d", ((int) minutes), ((int) seconds)));
+
+            timerHandlerExplore.postDelayed(this, 0);
+        }
+
+    };
+
     public void fastest(View view) {
-        String left = "beginFastest";
-        byte[] bytes = left.getBytes(Charset.defaultCharset());
-        Bluetooth.mBluetoothConnection.write(bytes);
+
+        if(Bluetooth.mBTDevice != null){
+            String fastest = "beginFastest";
+            byte[] bytes = fastest.getBytes(Charset.defaultCharset());
+            Bluetooth.mBluetoothConnection.write(bytes);
+            stillFast = true;
+            startFastTime = System.currentTimeMillis();
+            timerHandlerFastest.postDelayed(timerRunnableFastest, 0);
+            fastestBtn.setEnabled(false);
+            disableDirection();
+        }
+        else{
+            Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Handler for fastest path timer function
+    Handler timerHandlerFastest = new Handler();
+    Runnable timerRunnableFastest = new Runnable() {
+        @Override
+        public void run() {
+            if(!stillFast){
+                return;
+            }
+            long millis = System.currentTimeMillis() - startFastTime;
+            int seconds = (int) (millis / 1000.0);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            fastestreceiveTV.setText("Min : Seconds "+String.format("%d:%d", ((int)minutes), ((int)seconds)));
+            timerHandlerFastest.postDelayed(this, 0);
+        }
+    };
+
+    //Enable directional buttons
+    private void enableDirection(){
+        upButton.setEnabled(true);
+        downBtn.setEnabled(true);
+        leftBtn.setEnabled(true);
+        rightBtn.setEnabled(true);
+    }
+    //Disable directional buttons
+    private void disableDirection(){
+        upButton.setEnabled(false);
+        downBtn.setEnabled(false);
+        leftBtn.setEnabled(false);
+        rightBtn.setEnabled(false);
     }
 
     public void toggleAutoManual(View view) {
@@ -289,14 +383,14 @@ public class MazeActivity extends AppCompatActivity {
             messages = new StringBuilder();
             messages.append(text);
 
-
+            //for status update
             if (text.equals("exploring") || text.equals("fastest path") || text.equals("turning left") ||
                     text.equals("turning right") || text.equals("moving forward") || text.equals("reversing") || text.equals("stop")) {
 
                 statusreceiveTV.setText(messages.toString().toUpperCase());
 
-
             }
+
             String text1 = automanualBtn.getText().toString();
             // receive format MDF|current_y|current_x|robotfacing|exploredStr|obstacleStr
             if(text.contains("MDF")){
@@ -342,6 +436,18 @@ public class MazeActivity extends AppCompatActivity {
                 }
             }
 
+            if(text.contains("endexplore")){
+                stillExplore=false;
+                explorationBtn.setEnabled(true);
+                enableDirection();
+            }
+
+            if(text.contains("endfastest")){
+                stillFast=false;
+                fastestBtn.setEnabled(true);
+                enableDirection();
+            }
+
         }
     };
 
@@ -355,6 +461,7 @@ public class MazeActivity extends AppCompatActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
                 Bluetooth.mBTDevice = device;
+                btConnectedTVList.setText(device.getName());
                 Toast.makeText(MazeActivity.this, "BT Connected to: "+ deviceName, Toast.LENGTH_SHORT).show();
 
             }
@@ -368,6 +475,7 @@ public class MazeActivity extends AppCompatActivity {
                 String deviceName = device2.getName();
                 Toast.makeText(MazeActivity.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
                 Bluetooth.mBTDevice = null;
+                btConnectedTVList.setText("Not Connected");
                 Bluetooth.mBluetoothConnection.startClient(device2,MY_UUID_INSECURE);
             }
         }
