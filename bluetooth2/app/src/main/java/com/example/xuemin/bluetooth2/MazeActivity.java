@@ -435,6 +435,17 @@ public class MazeActivity extends AppCompatActivity {
                     storedMsg=mpInfo;
                 }
             }
+            if(mpInfo.contains("arrowPosition")) {
+                if (isAutoUpdate == true || listenForUpdate == true) {
+                    pixelGridView.arrowpost = true;
+                    pixelGridView.getArrowPosition(mpInfo);
+                    pixelGridView.invalidate();
+                    listenForUpdate=false;
+                }
+            }
+            else{
+                pixelGridView.arrowpost = false;
+            }
 
             if(text.contains("endexplore")){
                 stillExplore=false;
