@@ -43,6 +43,7 @@ public class PixelGridView extends View {
     private int[] arrowCoord = new int[3];
     ArrayList<Integer> arx = new ArrayList<Integer>();
     ArrayList<Integer> ary = new ArrayList<Integer>();
+    ArrayList<Integer> ard = new ArrayList<Integer>();
     public boolean arrowpost= false;
 
     private boolean[][] cellChecked;
@@ -243,20 +244,14 @@ public class PixelGridView extends View {
         if(arrowpost){
             int x  = arrowCoord[0];
             int y  = arrowCoord[1];
+            int d = arrowCoord[2];
             arx.add(x);
             ary.add(y);
-            //storedX[check] = x;
-            //storedY[check] = y;
-            check++;
-
-
+            ard.add(d);
             Bitmap myImg = BitmapFactory.decodeResource(getResources(), R.drawable.arrow);
-            Bitmap scaledImg = getResizedBitmap(myImg,cellWidth,cellWidth);
             for(int i=0;i<arx.size();i++) {
-                Log.d("this is my array", "arr: " +arx.get(i));
-                Log.d("this is my array", "arr: " + ary.get(i));
-                Log.d("this is my check", "check: " + check);
-                canvas.drawBitmap(scaledImg,arx.get(i)*cellWidth,ary.get(i)*cellHeight,null);
+                Bitmap scaledImg = getResizedBitmap(myImg,cellWidth,cellWidth,ard.get(i));
+                canvas.drawBitmap(scaledImg,(arx.get(i)*cellWidth)+5,(ary.get(i)*cellHeight)+10,null);
             }
             //canvas.drawBitmap(getResizedBitmap(myImg,cellWidth,cellHeight),x*cellWidth,y*cellHeight,null);
 
@@ -264,16 +259,18 @@ public class PixelGridView extends View {
 
 
     }
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight,int direction) {
         int width = bm.getWidth();
         int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
+        float scaleWidth = (float)0.08620991;
+        float scaleHeight = (float)0.08620991;
         // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP
+        Log.d("this is my array", "arr: " +scaleWidth);
+        Log.d("this is my array", "arr: " +scaleHeight);
         matrix.postScale(scaleWidth, scaleHeight);
-        switch (arrowCoord[2]){
+        switch (direction){
             case 0:
                 matrix.postRotate(0);
                 break;
@@ -294,7 +291,6 @@ public class PixelGridView extends View {
         // "RECREATE" THE NEW BITMAP
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
-        bm.recycle();
         return resizedBitmap;
     }
 
