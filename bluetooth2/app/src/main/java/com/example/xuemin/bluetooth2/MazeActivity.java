@@ -24,14 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.xuemin.bluetooth2.PixelGridView;
-
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
 import java.util.UUID;
 
-public class MazeActivity extends AppCompatActivity {
+public class MazeActivity extends AppCompatActivity implements SensorEventListener {
     private static final String TAG = "MazeActivity";
     BluetoothConnectionService bluetoothConnectionService;
     android.support.v7.widget.Toolbar toolbar;
@@ -47,6 +50,7 @@ public class MazeActivity extends AppCompatActivity {
     Button startBtn;
     Button explorationBtn;
     Button fastestBtn;
+    Button tlitBtn;
     BluetoothAdapter mBluetoothAdapter;
     public static TextView x_coor;
     public static TextView y_coor;
@@ -66,6 +70,20 @@ public class MazeActivity extends AppCompatActivity {
     long startFastTime =0;
     private boolean stillExplore = false;
     private boolean stillFast = false;
+    private SensorManager sensorManager;
+    private Sensor sensor;
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private Sensor mMagnetometer;
+    private float[] mR = new float[9];
+    private float[] mOrientation = new float[3];
+    private long lastUpdate;
+
+    private float[] mLastAccelerometer = new float[3];
+    private float[] mLastMagnetometer = new float[3];
+    private boolean mLastAccelerometerSet = false;
+    private boolean mLastMagnetometerSet = false;
 
 
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -98,6 +116,7 @@ public class MazeActivity extends AppCompatActivity {
         startBtn = (Button) findViewById(R.id.startBtn);
         explorationBtn = (Button) findViewById(R.id.explorationBtn);
         fastestBtn = (Button) findViewById(R.id.fastestBtn);
+        tlitBtn = (Button) findViewById(R.id.tlitBtn);
 
         statusreceiveTV = (TextView) findViewById(R.id.statusreceiveTV);
         x_coor = (TextView) findViewById(R.id.x_coor);
@@ -105,6 +124,14 @@ public class MazeActivity extends AppCompatActivity {
         btConnectedTVList = (TextView) findViewById(R.id.btConnectedTVList);
         fastestreceiveTV = (TextView) findViewById(R.id.fastestreceiveTV);
         explorationreceiveTV = (TextView) findViewById(R.id.explorationreceiveTV);
+
+        //declaring Sensor Manager and sensor type
+        /*sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);*/
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         //arena= (TextView)findViewById(R.id.arenainfo);
 
@@ -359,6 +386,15 @@ public class MazeActivity extends AppCompatActivity {
         }
     }
 
+    public void tilt(View view) {
+        if(tlitBtn.getText() == "Tilt Off"){
+            tlitBtn.setText("Tilt On");
+        }
+        else{
+            tlitBtn.setText("Tilt Off");
+        }
+    }
+
     class MyGlobalListenerClass implements ViewTreeObserver.OnGlobalLayoutListener{
         public void onGlobalLayout(){
             pixelGridView=(PixelGridView)findViewById(R.id.pixelGridView);
@@ -384,11 +420,27 @@ public class MazeActivity extends AppCompatActivity {
             messages.append(text);
 
             //for status update
-            if (text.equals("exploring") || text.equals("fastest path") || text.equals("turning left") ||
-                    text.equals("turning right") || text.equals("moving forward") || text.equals("reversing") || text.equals("stop")) {
-
-                statusreceiveTV.setText(messages.toString().toUpperCase());
-
+            if (text.equals("exploring") || text.equals("fastest path") || text.equals("L90") ||
+                    text.equals("R90") || text.equals("F1") || text.equals("B1") || text.equals("stop")) {
+                if(text.equals("R90")){
+                    String turnright = "Turn Right";
+                    statusreceiveTV.setText(turnright.toUpperCase());
+                }
+                if(text.equals("L90")){
+                    String turnleft = "Turn Left";
+                    statusreceiveTV.setText(turnleft.toUpperCase());
+                }
+                if(text.equals("F1")){
+                    String forward = "Moving Forward";
+                    statusreceiveTV.setText(forward.toUpperCase());
+                }
+                if(text.equals("B1")){
+                    String reverse = "Reversing";
+                    statusreceiveTV.setText(reverse.toUpperCase());
+                }
+                else{
+                    statusreceiveTV.setText(messages.toString().toUpperCase());
+                }
             }
 
             String text1 = automanualBtn.getText().toString();
@@ -503,55 +555,7 @@ public class MazeActivity extends AppCompatActivity {
                 String grid[] = position.split(",");
                 int x = Integer.parseInt(grid[0]);
                 int y = Integer.parseInt(grid[1]);
-                if(direction == "NORTH"){
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("WEST");
-                        String updatedposition = y+"|"+x+"|"+"WEST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "EAST"){
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("NORTH");
-                        String updatedposition = y+"|"+x+"|"+"NORTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                if(direction == "WEST"){
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("SOUTH");
-                        String updatedposition = y+"|"+x+"|"+"SOUTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "SOUTH"){
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("EAST");
-                        String updatedposition = y+"|"+x+"|"+"EAST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                turnLeftMovement(x,y,direction);
             }
             else{
                 Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
@@ -559,7 +563,8 @@ public class MazeActivity extends AppCompatActivity {
 
         }
 
-        public void forward(View view) {
+
+    public void forward(View view) {
             if(Bluetooth.mBTDevice != null){
                 //String forward = "f";
                 String forward = "+F1";
@@ -570,66 +575,34 @@ public class MazeActivity extends AppCompatActivity {
                 String grid[] = position.split(",");
                 int x = Integer.parseInt(grid[0]);
                 int y = Integer.parseInt(grid[1]);
-                if(direction == "NORTH"){
-                    y = y + 1;
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("NORTH");
-                        String updatedposition = y+"|"+x+"|"+"NORTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "EAST"){
-                    x = x + 1;
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("EAST");
-                        String updatedposition = y+"|"+x+"|"+"EAST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                if(direction == "WEST"){
-                    x = x - 1;
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("WEST");
-                        String updatedposition = y+"|"+x+"|"+"WEST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "SOUTH"){
-                    y = y - 1;
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("SOUTH");
-                        String updatedposition = y+"|"+x+"|"+"SOUTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                forwardMovement(x,y,direction);
             }
             else {
                 Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
             }
         }
+    public void turnRight(View view) {
+        if(Bluetooth.mBTDevice != null){
+            //String right = "tr";
+            String right = "+R90";
+            byte[] bytes = right.getBytes(Charset.defaultCharset());
+            Bluetooth.mBluetoothConnection.write(bytes);
+            String position = robot.getPosition();
+            String direction = robot.getDirection();
+            String grid[] = position.split(",");
+            int x = Integer.parseInt(grid[0]);
+            int y = Integer.parseInt(grid[1]);
+            turnRightMovement(x,y,direction);
 
-        public void reverse(View view) {
+        }
+        else {
+            Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    public void reverse(View view) {
             if(Bluetooth.mBTDevice != null){
                 //String reverse = "r";
                 String reverse = "+B1";
@@ -640,129 +613,333 @@ public class MazeActivity extends AppCompatActivity {
                 String grid[] = position.split(",");
                 int x = Integer.parseInt(grid[0]);
                 int y = Integer.parseInt(grid[1]);
-                if(direction == "NORTH"){
-                    y = y - 1;
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("NORTH");
-                        String updatedposition = y+"|"+x+"|"+"NORTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "EAST"){
-                    x = x - 1;
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("EAST");
-                        String updatedposition = y+"|"+x+"|"+"EAST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                reverseMovement(x,y,direction);
 
-                if(direction == "WEST"){
-                    x = x + 1;
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("WEST");
-                        String updatedposition = y+"|"+x+"|"+"WEST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "SOUTH"){
-                    y = y + 1;
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("SOUTH");
-                        String updatedposition = y+"|"+x+"|"+"SOUTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
             }
             else {
                 Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
             }
         }
 
-        public void turnRight(View view) {
-            if(Bluetooth.mBTDevice != null){
-                //String right = "tr";
-                String right = "+R90";
-                byte[] bytes = right.getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
-                String position = robot.getPosition();
-                String direction = robot.getDirection();
-                String grid[] = position.split(",");
-                int x = Integer.parseInt(grid[0]);
-                int y = Integer.parseInt(grid[1]);
-                if(direction == "NORTH"){
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("EAST");
-                        String updatedposition = y+"|"+x+"|"+"EAST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
+    private void reverseMovement(int x, int y, String direction) {
+        if(direction == "NORTH"){
+            y = y - 1;
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("NORTH");
+                String updatedposition = y+"|"+x+"|"+"NORTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "EAST"){
+            x = x - 1;
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("EAST");
+                String updatedposition = y+"|"+x+"|"+"EAST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(direction == "WEST"){
+            x = x + 1;
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("WEST");
+                String updatedposition = y+"|"+x+"|"+"WEST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "SOUTH"){
+            y = y + 1;
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("SOUTH");
+                String updatedposition = y+"|"+x+"|"+"SOUTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+    private void turnRightMovement(int x, int y, String direction) {
+        if(direction == "NORTH"){
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("EAST");
+                String updatedposition = y+"|"+x+"|"+"EAST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "EAST"){
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("SOUTH");
+                String updatedposition = y+"|"+x+"|"+"SOUTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(direction == "WEST"){
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("NORTH");
+                String updatedposition = y+"|"+x+"|"+"NORTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "SOUTH"){
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("WEST");
+                String updatedposition = y+"|"+x+"|"+"WEST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void turnLeftMovement(int x, int y, String direction) {
+
+        if(direction == "NORTH"){
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("WEST");
+                String updatedposition = y+"|"+x+"|"+"WEST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "EAST"){
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("NORTH");
+                String updatedposition = y+"|"+x+"|"+"NORTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(direction == "WEST"){
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("SOUTH");
+                String updatedposition = y+"|"+x+"|"+"SOUTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "SOUTH"){
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("EAST");
+                String updatedposition = y+"|"+x+"|"+"EAST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void forwardMovement(int x, int y, String direction) {
+        if(direction == "NORTH"){
+            y = y + 1;
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("NORTH");
+                String updatedposition = y+"|"+x+"|"+"NORTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "EAST"){
+            x = x + 1;
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("EAST");
+                String updatedposition = y+"|"+x+"|"+"EAST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(direction == "WEST"){
+            x = x - 1;
+            if(x > 0 && x < 14){
+                robot.setPosition(x,y);
+                robot.setDirection("WEST");
+                String updatedposition = y+"|"+x+"|"+"WEST";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if(direction == "SOUTH"){
+            y = y - 1;
+            if(y > 0 && y < 19){
+                robot.setPosition(x,y);
+                robot.setDirection("SOUTH");
+                String updatedposition = y+"|"+x+"|"+"SOUTH";
+                pixelGridView.updateRobotPos(updatedposition);
+                pixelGridView.invalidate();
+            }
+            else{
+                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        long actualTime = event.timestamp;
+
+        if (event.sensor == mAccelerometer) {
+            System.arraycopy(event.values, 0, mLastAccelerometer, 0,
+                    event.values.length);
+            mLastAccelerometerSet = true;
+        } else if (event.sensor == mMagnetometer) {
+            System.arraycopy(event.values, 0, mLastMagnetometer, 0,
+                    event.values.length);
+            mLastMagnetometerSet = true;
+        }
+        if (mLastAccelerometerSet && mLastMagnetometerSet) {
+            SensorManager.getRotationMatrix(mR, null, mLastAccelerometer,
+                    mLastMagnetometer);
+            SensorManager.getOrientation(mR, mOrientation);
+        }
+
+        //if (tiltBtn.getText().equals("Tilt Off")) {
+
+
+            if (((actualTime - lastUpdate) > 1000000000)) {
+                float x = mOrientation[2];
+                float y = mOrientation[1];
+
+                if (Math.abs(x) > Math.abs(y)) {
+                    if (x > 0.7 ) {
+                        String position = robot.getPosition();
+                        String direction = robot.getDirection();
+                        String grid[] = position.split(",");
+                        int robotx = Integer.parseInt(grid[0]);
+                        int roboty = Integer.parseInt(grid[1]);
+                        turnRightMovement(robotx,roboty,direction);
+                        Toast.makeText(MazeActivity.this, "Command is : Move Right", Toast.LENGTH_SHORT).show();
+
                     }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                    if (x < -0.7) {
+                        String position = robot.getPosition();
+                        String direction = robot.getDirection();
+                        String grid[] = position.split(",");
+                        int robotx = Integer.parseInt(grid[0]);
+                        int roboty = Integer.parseInt(grid[1]);
+                        turnLeftMovement(robotx,roboty,direction);
+                        Toast.makeText(MazeActivity.this, "Command is : Move Left", Toast.LENGTH_SHORT).show();
+                        //sendMessage(message);
+                        //Toast.makeText(getActivity(), "Command is : " + message, Toast.LENGTH_SHORT).show();
                     }
-                }
-                if(direction == "EAST"){
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("SOUTH");
-                        String updatedposition = y+"|"+x+"|"+"SOUTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
+                } else {
+                    if (y > 0.3) {
+                        String position = robot.getPosition();
+                        String direction = robot.getDirection();
+                        String grid[] = position.split(",");
+                        int robotx = Integer.parseInt(grid[0]);
+                        int roboty = Integer.parseInt(grid[1]);
+                        forwardMovement(robotx,roboty,direction);
+                        Toast.makeText(MazeActivity.this, "Command is : Move Up", Toast.LENGTH_SHORT).show();
                     }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                    if (y < -0.7) {
+                        String position = robot.getPosition();
+                        String direction = robot.getDirection();
+                        String grid[] = position.split(",");
+                        int robotx = Integer.parseInt(grid[0]);
+                        int roboty = Integer.parseInt(grid[1]);
+                        reverseMovement(robotx,roboty,direction);
+                        Toast.makeText(MazeActivity.this, "Command is : Move Down", Toast.LENGTH_SHORT).show();
                     }
                 }
 
-                if(direction == "WEST"){
-                    if(x > 0 && x < 14){
-                        robot.setPosition(x,y);
-                        robot.setDirection("NORTH");
-                        String updatedposition = y+"|"+x+"|"+"NORTH";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(direction == "SOUTH"){
-                    if(y > 0 && y < 19){
-                        robot.setPosition(x,y);
-                        robot.setDirection("WEST");
-                        String updatedposition = y+"|"+x+"|"+"WEST";
-                        pixelGridView.updateRobotPos(updatedposition);
-                        pixelGridView.invalidate();
-                    }
-                    else{
-                        Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            else {
-                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
-            }
-        }
+                lastUpdate = actualTime;
+
+           }
+
+        //} else {
+            return;
+        //}
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       /* sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);*/
+
+        mLastAccelerometerSet = false;
+        mLastMagnetometerSet = false;
+        mSensorManager.registerListener(this, mAccelerometer,
+                SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mMagnetometer,
+                SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //unregister Sensor listener
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor arg0, int arg1) {
+    }
 
 }

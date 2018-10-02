@@ -151,8 +151,15 @@
                 android:id="@+id/startBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start"
-                android:onClick="setStartPoint"/>
+                android:onClick="setStartPoint"
+                android:text="Start" />
+
+            <Button
+                android:id="@+id/tlitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="tilt"
+                android:text="Tlit On"/>
 
         </LinearLayout>
 
