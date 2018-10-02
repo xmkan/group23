@@ -13,6 +13,7 @@ public class MapDecoder {
     private String robotPosStr;
     private String exploredMapStr;
     private String mapObjectStr;
+    private String arrowPosStr;
     private int[]waypoint = new int[2];
     private boolean wpSet=false;
     //all 0 by default ie. unexplored
@@ -134,6 +135,32 @@ public class MapDecoder {
         return coord;
     }
 
+
+    public int[] decodeArrowPosition(String arrowPos){
+
+        JSONObject receive= null;
+        try {
+            receive = new JSONObject(arrowPos);
+            JSONArray coor=receive.getJSONArray("arrowPosition");
+            int x=coor.getInt(0);
+            int y=coor.getInt(1);
+            int direction=coor.getInt(2);
+
+            String tempStr = String.format("%s,%s,%s",
+                    x,y,direction);
+            Log.e("arrowPos",tempStr);
+            this.arrowPosStr = tempStr;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        int [] coord = new int[3];
+        String[] coordArr = arrowPosStr.split(",");
+        coord[0] = Integer.parseInt(coordArr[0].trim()); //y
+        coord[1] = Integer.parseInt(coordArr[1].trim()); //x
+        coord[2] = Integer.parseInt(coordArr[2].trim()); //orientation
+
+        return coord;
+    }
     //value 1: explored, value 0: unexplored
     private int[] decodeExploredMap(){
 

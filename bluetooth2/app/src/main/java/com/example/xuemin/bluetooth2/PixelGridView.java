@@ -1,13 +1,19 @@
 package com.example.xuemin.bluetooth2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class PixelGridView extends View {
     private int numColumns, numRows;
@@ -29,6 +35,15 @@ public class PixelGridView extends View {
     private Paint robotPaint = new Paint();
     private Paint robotbackPaint = new Paint();
     private Paint waypointPaint = new Paint();
+
+
+    private int size = 1;
+    private int check = 0;
+
+    private int[] arrowCoord = new int[3];
+    ArrayList<Integer> arx = new ArrayList<Integer>();
+    ArrayList<Integer> ary = new ArrayList<Integer>();
+    public boolean arrowpost= false;
 
     private boolean[][] cellChecked;
     private boolean[][] startCellChecked;
@@ -225,8 +240,64 @@ public class PixelGridView extends View {
             canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
         }
 
+        if(arrowpost){
+            int x  = arrowCoord[0];
+            int y  = arrowCoord[1];
+            arx.add(x);
+            ary.add(y);
+            //storedX[check] = x;
+            //storedY[check] = y;
+            check++;
+
+
+            Bitmap myImg = BitmapFactory.decodeResource(getResources(), R.drawable.arrow);
+            Bitmap scaledImg = getResizedBitmap(myImg,cellWidth,cellWidth);
+            for(int i=0;i<arx.size();i++) {
+                Log.d("this is my array", "arr: " +arx.get(i));
+                Log.d("this is my array", "arr: " + ary.get(i));
+                Log.d("this is my check", "check: " + check);
+                canvas.drawBitmap(scaledImg,arx.get(i)*cellWidth,ary.get(i)*cellHeight,null);
+            }
+            //canvas.drawBitmap(getResizedBitmap(myImg,cellWidth,cellHeight),x*cellWidth,y*cellHeight,null);
+
+        }
+
 
     }
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        switch (arrowCoord[2]){
+            case 0:
+                matrix.postRotate(0);
+                break;
+            case 1:
+                matrix.postRotate(90);
+                break;
+            case 2:
+                matrix.postRotate(180);
+                break;
+            case 3:
+                matrix.postRotate(270);
+                break;
+
+            default:
+                break;
+        }
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
+    }
+
 
     public void clearMap(){
         md.clearMapArray();
@@ -252,6 +323,11 @@ public class PixelGridView extends View {
         md.updateRobotPos(robotPos);
     }
 
+
+    public void getArrowPosition(String arrowPost){
+        arrowCoord = md.decodeArrowPosition(arrowPost);
+        // MazeActivity.setCoordinates(arrowCoord[0],arrowCoord[1]);
+    }
 
     public void setCellchecked(int x, int y){
 
