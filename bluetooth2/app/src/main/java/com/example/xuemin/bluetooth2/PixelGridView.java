@@ -262,8 +262,8 @@ public class PixelGridView extends View {
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight,int direction) {
         int width = bm.getWidth();
         int height = bm.getHeight();
-        float scaleWidth = (float)0.08620991;
-        float scaleHeight = (float)0.08620991;
+        float scaleWidth = (float)0.07620991;
+        float scaleHeight = (float)0.07620991;
         // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP

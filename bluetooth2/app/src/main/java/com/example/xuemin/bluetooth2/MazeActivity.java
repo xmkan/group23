@@ -50,7 +50,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     Button startBtn;
     Button explorationBtn;
     Button fastestBtn;
-    Button tlitBtn;
+    Button tiltBtn;
     BluetoothAdapter mBluetoothAdapter;
     public static TextView x_coor;
     public static TextView y_coor;
@@ -116,7 +116,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         startBtn = (Button) findViewById(R.id.startBtn);
         explorationBtn = (Button) findViewById(R.id.explorationBtn);
         fastestBtn = (Button) findViewById(R.id.fastestBtn);
-        tlitBtn = (Button) findViewById(R.id.tlitBtn);
+        tiltBtn = (Button) findViewById(R.id.tiltBtn);
 
         statusreceiveTV = (TextView) findViewById(R.id.statusreceiveTV);
         x_coor = (TextView) findViewById(R.id.x_coor);
@@ -387,11 +387,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void tilt(View view) {
-        if(tlitBtn.getText() == "Tilt Off"){
-            tlitBtn.setText("Tilt On");
+        if(tiltBtn.getText() == "Tilt Off"){
+            tiltBtn.setText("Tilt On");
         }
         else{
-            tlitBtn.setText("Tilt Off");
+            tiltBtn.setText("Tilt Off");
         }
     }
 
@@ -859,7 +859,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             SensorManager.getOrientation(mR, mOrientation);
         }
 
-        //if (tiltBtn.getText().equals("Tilt Off")) {
+        if (tiltBtn.getText().equals("Tilt Off")) {
 
 
             if (((actualTime - lastUpdate) > 1000000000)) {
@@ -913,9 +913,9 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
            }
 
-        //} else {
+        } else {
             return;
-        //}
+        }
     }
 
     @Override
