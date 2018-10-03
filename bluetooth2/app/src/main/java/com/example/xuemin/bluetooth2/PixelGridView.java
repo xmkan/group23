@@ -37,14 +37,13 @@ public class PixelGridView extends View {
     private Paint waypointPaint = new Paint();
 
 
-    private int size = 1;
-    private int check = 0;
-
     private int[] arrowCoord = new int[3];
     ArrayList<Integer> arx = new ArrayList<Integer>();
     ArrayList<Integer> ary = new ArrayList<Integer>();
     ArrayList<Integer> ard = new ArrayList<Integer>();
     public boolean arrowpost= false;
+    private boolean deleteBitmap = false;
+    private Bitmap myImg ;
 
     private boolean[][] cellChecked;
     private boolean[][] startCellChecked;
@@ -248,18 +247,24 @@ public class PixelGridView extends View {
             arx.add(x);
             ary.add(y);
             ard.add(d);
-            Bitmap myImg = BitmapFactory.decodeResource(getResources(), R.drawable.arrow);
+            myImg = BitmapFactory.decodeResource(getResources(), R.drawable.arrow);
             for(int i=0;i<arx.size();i++) {
-                Bitmap scaledImg = getResizedBitmap(myImg,cellWidth,cellWidth,ard.get(i));
+                Bitmap scaledImg = getResizedBitmap(myImg,ard.get(i));
                 canvas.drawBitmap(scaledImg,(arx.get(i)*cellWidth)+5,(ary.get(i)*cellHeight)+10,null);
             }
-            //canvas.drawBitmap(getResizedBitmap(myImg,cellWidth,cellHeight),x*cellWidth,y*cellHeight,null);
+        }
 
+        if(deleteBitmap){
+            myImg = BitmapFactory.decodeResource(getResources(), R.drawable.rectangle);
+            for(int i=0;i<arx.size();i++) {
+                Bitmap scaledImg = getResizedBitmap(myImg, ard.get(i));
+                canvas.drawBitmap(scaledImg, (arx.get(i) * cellWidth) + 5, (ary.get(i) * cellHeight) + 10, null);
+            }
         }
 
 
     }
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight,int direction) {
+    public Bitmap getResizedBitmap(Bitmap bm,int direction) {
         int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = (float)0.07620991;
@@ -297,6 +302,11 @@ public class PixelGridView extends View {
 
     public void clearMap(){
         md.clearMapArray();
+        deleteBitmap = true;
+        arrowpost = false;
+        arx.clear();
+        ary.clear();
+        ard.clear();
     }
 
     public void wpShow(){
