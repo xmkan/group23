@@ -43,6 +43,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     ImageButton rightBtn;
     ImageButton leftBtn;
     PixelGridView pixelGridView;
+    MapDecoder md;
     Robot robot;
     LinearLayout maze;
     Button automanualBtn;
@@ -57,6 +58,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     TextView btConnectedTVList;
     TextView fastestreceiveTV;
     TextView explorationreceiveTV;
+    TextView p1String;
+    TextView p2String;
     public static TextView arena;
     TextView startX;
     TextView startY;
@@ -124,6 +127,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         btConnectedTVList = (TextView) findViewById(R.id.btConnectedTVList);
         fastestreceiveTV = (TextView) findViewById(R.id.fastestreceiveTV);
         explorationreceiveTV = (TextView) findViewById(R.id.explorationreceiveTV);
+        p1String = (TextView)findViewById(R.id.p1String);
+        p2String = (TextView)findViewById(R.id.p2String);
 
         //declaring Sensor Manager and sensor type
         /*sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -144,6 +149,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         maze.getViewTreeObserver().addOnGlobalLayoutListener(new MyGlobalListenerClass());
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("incomingMessage"));
+
 
 
         //to track if the bluetooth is connected to any device or not
@@ -456,6 +462,9 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 String obstacleMap = grid[5];
                 pixelGridView.updateRobotPos(position);
                 pixelGridView.updateArena(exploredMap,obstacleMap);
+                pixelGridView.invalidate();
+                p1String.setText(exploredMap);
+                p2String.setText(obstacleMap);
                 }
             }
             byte[] read = text.getBytes();
@@ -875,6 +884,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int roboty = Integer.parseInt(grid[1]);
                         turnRightMovement(robotx,roboty,direction);
                         Toast.makeText(MazeActivity.this, "Command is : Move Right", Toast.LENGTH_SHORT).show();
+                        if (Bluetooth.mBTDevice  !=null) {
+                            String update = "+R90";
+                            byte[] bytes = update.getBytes(Charset.defaultCharset());
+                            Bluetooth.mBluetoothConnection.write(bytes);
+                        }
 
                     }
                     if (x < -0.7) {
@@ -885,6 +899,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int roboty = Integer.parseInt(grid[1]);
                         turnLeftMovement(robotx,roboty,direction);
                         Toast.makeText(MazeActivity.this, "Command is : Move Left", Toast.LENGTH_SHORT).show();
+                        if (Bluetooth.mBTDevice  !=null) {
+                            String update = "+L90";
+                            byte[] bytes = update.getBytes(Charset.defaultCharset());
+                            Bluetooth.mBluetoothConnection.write(bytes);
+                        }
                         //sendMessage(message);
                         //Toast.makeText(getActivity(), "Command is : " + message, Toast.LENGTH_SHORT).show();
                     }
@@ -897,6 +916,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int roboty = Integer.parseInt(grid[1]);
                         forwardMovement(robotx,roboty,direction);
                         Toast.makeText(MazeActivity.this, "Command is : Move Up", Toast.LENGTH_SHORT).show();
+                        if (Bluetooth.mBTDevice  !=null) {
+                            String update = "+F1";
+                            byte[] bytes = update.getBytes(Charset.defaultCharset());
+                            Bluetooth.mBluetoothConnection.write(bytes);
+                        }
                     }
                     if (y < -0.7) {
                         String position = robot.getPosition();
@@ -906,6 +930,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int roboty = Integer.parseInt(grid[1]);
                         reverseMovement(robotx,roboty,direction);
                         Toast.makeText(MazeActivity.this, "Command is : Move Down", Toast.LENGTH_SHORT).show();
+                       if (Bluetooth.mBTDevice  !=null){
+                           String update = "+B1";
+                           byte[] bytes = update.getBytes(Charset.defaultCharset());
+                           Bluetooth.mBluetoothConnection.write(bytes);
+                        }
+
                     }
                 }
 
@@ -931,12 +961,6 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //unregister Sensor listener
-        sensorManager.unregisterListener(this);
-    }
 
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {

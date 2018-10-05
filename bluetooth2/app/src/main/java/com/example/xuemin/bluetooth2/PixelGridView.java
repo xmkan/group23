@@ -35,6 +35,7 @@ public class PixelGridView extends View {
     private Paint robotPaint = new Paint();
     private Paint robotbackPaint = new Paint();
     private Paint waypointPaint = new Paint();
+    private Paint goalZone = new Paint();
 
 
     private int[] arrowCoord = new int[3];
@@ -73,6 +74,7 @@ public class PixelGridView extends View {
         robotPaint.setColor(Color.GRAY);
         robotbackPaint.setColor(Color.DKGRAY);
         waypointPaint.setColor(Color.BLUE);
+        goalZone.setColor(Color.BLACK);
 
     }
     public void setTotalWidth(int totalWidth){
@@ -146,7 +148,26 @@ public class PixelGridView extends View {
         Path path = new Path();
 
         //startCellChecked[13][2] = true;
+        //start Point
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(35);
 
+        //start Point
+       for (int i = 0; i <= 2; i++) {
+            for(int j= 0; j<=2;j++){
+                canvas.drawRect(i * cellWidth, (19-j) * cellHeight, (i + 1) * cellWidth, (19- j + 1) * cellHeight, goalZone);
+            }
+        }
+
+        //goal zone
+        for (int i = 12; i <= 14; i++) {
+            for(int j= 17; j<=19;j++){
+                canvas.drawRect(i * cellWidth, (19-j) * cellHeight, (i + 1) * cellWidth, (19- j + 1) * cellHeight, goalZone);
+            }
+        }
+        canvas.drawText("START", (1-1)*cellHeight, (19-0)*cellHeight, paint);
+        canvas.drawText("GOAL", (11)*cellHeight, (2)*cellHeight, paint);
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
 
@@ -240,6 +261,7 @@ public class PixelGridView extends View {
             canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
         }
 
+
         if(arrowpost){
             int x  = arrowCoord[0];
             int y  = arrowCoord[1];
@@ -264,6 +286,8 @@ public class PixelGridView extends View {
 
 
     }
+
+
     public Bitmap getResizedBitmap(Bitmap bm,int direction) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -272,8 +296,6 @@ public class PixelGridView extends View {
         // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP
-        Log.d("this is my array", "arr: " +scaleWidth);
-        Log.d("this is my array", "arr: " +scaleHeight);
         matrix.postScale(scaleWidth, scaleHeight);
         switch (direction){
             case 0:

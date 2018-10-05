@@ -35,8 +35,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="560dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/btConnectedTV"
                 android:layout_width="match_parent"
@@ -50,9 +51,9 @@
                 android:id="@+id/btConnectedTVList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text=""
-                android:textSize="14sp"/>
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
 
             <TextView
@@ -68,9 +69,9 @@
                 android:id="@+id/statusreceiveTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text="No Status"
-                android:textSize="14sp"/>
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
 
             <TextView
@@ -86,9 +87,9 @@
                 android:id="@+id/fastestreceiveTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text=""
-                android:textSize="14sp"/>
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/explorationTV"
@@ -110,6 +111,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -122,12 +124,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:ems="10"
-                    android:text="Y Coor"/>
+                    android:text="Y Coor" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/x_coor"
                     android:layout_width="wrap_content"
@@ -159,7 +162,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="tilt"
-                android:text="Tlit On"/>
+                android:text="Tlit On" />
+
+            <TextView
+                android:id="@+id/p1String"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:text="P1" />
+
+            <TextView
+                android:id="@+id/p2String"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:text="P2T" />
 
         </LinearLayout>
 

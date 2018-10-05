@@ -11,13 +11,20 @@ public class MapDecoder {
      * Variable and constants
      */
     private String robotPosStr;
-    private String exploredMapStr;
-    private String mapObjectStr;
+    public String exploredMapStr = "0";
+    public String mapObjectStr = "0";
     private String arrowPosStr;
+    public String p1Str;
+    public String p2Str;
     private int[]waypoint = new int[2];
     private boolean wpSet=false;
     //all 0 by default ie. unexplored
     private static int[] mapArray = new int[300];
+    StringBuilder sb1 = new StringBuilder();
+    StringBuilder sb2 = new StringBuilder();
+
+
+
 
     public MapDecoder(){
         super();
@@ -65,11 +72,27 @@ public class MapDecoder {
     }
 
     public void updateMapArray(String exploredMap,String obstacleMap){
+        int size = 0;
         mapArray=new int[300];
       /*  waypoint[0]=18;
         waypoint[1]=14;*/
-        exploredMapStr = exploredMap;
 
+      if(exploredMap.length() != 75){
+          size = 75 - exploredMap.length();
+          for(int i = 0; i <= size; i++)
+              exploredMap ="0"+ exploredMap ;
+          Log.e("exploredMap",exploredMap);
+
+      }
+
+        if(obstacleMap.length() != 75){
+            size = 75 - obstacleMap.length();
+            for(int i = 0; i <= size; i++)
+            obstacleMap = "0"+obstacleMap ;
+            Log.e("obstacleMap",obstacleMap);
+        }
+
+        exploredMapStr = exploredMap;
         mapObjectStr = obstacleMap;
 
     }
@@ -118,6 +141,8 @@ public class MapDecoder {
         exploredMapArr = decodeExploredMap();
         mapObjectArr = decodeMapObject();
         currentMap = updateMap(robotPosArr,exploredMapArr,mapObjectArr,waypoint);
+
+
         return currentMap;
     }
 
@@ -189,8 +214,10 @@ public class MapDecoder {
                 binArray[arrPos++] = binString.charAt(3) - '0';
             }
         }
+
         return binArray;
     }
+
 
     //value 1: obstacle, value 2: empty
     private int[] decodeMapObject(){
@@ -203,6 +230,21 @@ public class MapDecoder {
         //hexString is of undetermined length (@compile time)
         for (int i= 0; i < mapObjectStr.length(); i++){
             binString = hexToBinary(String.valueOf(mapObjectStr.charAt(i)));
+          /*  if (i == 0){
+                //ignore the first 2 padding bits
+                binArray[arrPos++] = binString.charAt(2) - '0';
+                binArray[arrPos++] = binString.charAt(3) - '0';
+            }
+            else if (i == exploredMapStr.length()-1){
+                //ignore the last 2 padding bits
+                binArray[arrPos++] = binString.charAt(0) - '0';
+                binArray[arrPos++] = binString.charAt(1) - '0';
+            }else{
+                binArray[arrPos++] = binString.charAt(0) - '0';
+                binArray[arrPos++] = binString.charAt(1) - '0';
+                binArray[arrPos++] = binString.charAt(2) - '0';
+                binArray[arrPos++] = binString.charAt(3) - '0';
+            }*/
             //there exist padding bits at the end (0-3 bits), to be
             //process later.
             binArray[arrPos++] = binString.charAt(0) - '0';
@@ -210,8 +252,12 @@ public class MapDecoder {
             binArray[arrPos++] = binString.charAt(2) - '0';
             binArray[arrPos++] = binString.charAt(3) - '0';
         }
+
+
         return binArray;
     }
+
+
 
     private String hexToBinary(String hex){
         int i = Integer.parseInt(hex, 16);
