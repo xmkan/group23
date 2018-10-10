@@ -171,10 +171,10 @@ public class PixelGridView extends View {
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
 
-                /*if (testMap[j][i] == 0)
+                if (testMap[j][i] == 0)
                 {
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, whitePaint);
-                }*/
+                }
                 if (testMap[j][i] == 1)
                 {
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, greenPaint);
@@ -201,16 +201,7 @@ public class PixelGridView extends View {
                         canvas.drawPath(path, robotPaint);
                     }*/
                 }
-                if(testMap[j][i] == 5){
 
-                }
-                if(testMap[j][i] == 6){
-
-                }
-
-                if(testMap[j][i] == 7) {
-
-                }
                 if(testMap[j][i] == 8){
                     canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1) * cellWidth, (j + 1) * cellHeight, waypointPaint);
                 }

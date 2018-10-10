@@ -80,7 +80,7 @@ public class MapDecoder {
       if(exploredMap.length() != 75){
           size = 75 - exploredMap.length();
           for(int i = 0; i <= size; i++)
-              exploredMap ="0"+ exploredMap ;
+              exploredMap =exploredMap+"0" ;
           Log.e("exploredMap",exploredMap);
 
       }
@@ -88,12 +88,14 @@ public class MapDecoder {
         if(obstacleMap.length() != 75){
             size = 75 - obstacleMap.length();
             for(int i = 0; i <= size; i++)
-            obstacleMap = "0"+obstacleMap ;
+            obstacleMap = obstacleMap+"0" ;
             Log.e("obstacleMap",obstacleMap);
         }
 
         exploredMapStr = exploredMap;
         mapObjectStr = obstacleMap;
+        Log.e("exploredMapStr",exploredMapStr);
+        Log.e("exploredMapStr",mapObjectStr);
 
     }
 
