@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MazeActivity"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/maze"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.example.xuemin.bluetooth2.PixelGridView
+                android:id="@+id/pixelGridView"
+                android:layout_width="440sp"
+                android:layout_height="662sp"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="560dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/btConnectedTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="BT Connected"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btConnectedTVList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/statusTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Status"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/statusreceiveTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Status"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:id="@+id/fastestTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Fastest Path Time"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/fastestreceiveTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/explorationTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Exploration Path Time"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/explorationreceiveTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ems="10"
+                    android:text="X Coor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ems="10"
+                    android:text="Y Coor" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/x_coor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ems="10"
+                    android:hint="X"
+                    android:inputType="number" />
+
+                <TextView
+                    android:id="@+id/y_coor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ems="10"
+                    android:hint="Y"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/startBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="setStartPoint"
+                android:text="Start" />
+
+            <Button
+                android:id="@+id/tiltBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="tilt"
+                android:text="Tlit On"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/p1String"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:text="P1" />
+
+            <TextView
+                android:id="@+id/p2String"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:text="P2T" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/setwaypointBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:onClick="setWayPoint"
+            android:text="SET WAYPOINT" />
+
+        <Button
+            android:id="@+id/automanualBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/setwaypointBtn"
+            android:text="AUTO"
+            android:onClick="toggleAutoManual"/>
+
+        <Button
+            android:id="@+id/updateBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/automanualBtn"
+            android:text="UPDATE"
+            android:enabled="false"/>
+
+        <ImageButton
+            android:id="@+id/leftBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="227dp"
+            android:background="@android:color/transparent"
+            android:onClick="turnLeft"
+            android:paddingTop="10dp"
+            android:src="@drawable/left" />
+
+        <ImageButton
+            android:id="@+id/upBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/leftBtn"
+            android:background="@android:color/transparent"
+            android:onClick="forward"
+            android:paddingTop="10dp"
+            android:src="@drawable/up" />
+
+        <ImageButton
+            android:id="@+id/downBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/upBtn"
+            android:layout_toEndOf="@+id/leftBtn"
+            android:background="@android:color/transparent"
+            android:onClick="reverse"
+            android:padding="0dp"
+            android:src="@drawable/down" />
+
+        <ImageButton
+            android:id="@+id/rightBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/downBtn"
+            android:background="@android:color/transparent"
+            android:onClick="turnRight"
+            android:paddingTop="10dp"
+            android:src="@drawable/right" />
+
+        <Button
+            android:id="@+id/explorationBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="explore"
+            android:text="EXPLORATION" />
+
+        <Button
+            android:id="@+id/fastestBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/explorationBtn"
+            android:text="FASTEST PATH"
+            android:onClick="fastest" />
+
+        <Button
+            android:id="@+id/clearMapBtn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/fastestBtn"
+            android:text="CLEAR MAP"
+            android:onClick="clear"/>
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
