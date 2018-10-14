@@ -14,18 +14,23 @@
         android:orderInCategory="100"
         app:showAsAction="always" />
 
+    <item android:id="@+id/calib"
+        android:title="Calib"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
     <item android:id="@+id/settings"
         android:title="Settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/edit"
-        android:title="Edit"
+    <item android:id="@+id/p"
+        android:title="Calibp"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 
-    <item android:id="@+id/Logout"
-        android:title="Logout"
+    <item android:id="@+id/justp"
+        android:title="Just P"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

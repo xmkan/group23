@@ -92,6 +92,7 @@ public class Bluetooth extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //checking of permissions
         int ACTION_REQUEST_MULTIPLE_PERMISSION = 1;  // Any number
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -264,20 +265,31 @@ public class Bluetooth extends AppCompatActivity{
                 mBluetoothAdapter.startDiscovery();
                 Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+                this.registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
 
             if(!mBluetoothAdapter.isDiscovering()){
                 Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 mBluetoothAdapter.startDiscovery();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+                this.registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
         }
         else{
             Toast.makeText(Bluetooth.this,"Please turn on bluetooth first!", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString("0", incomingMessages.getText().toString());
+        savedInstanceState.putString("1", outgoingMessagesTV.getText().toString());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        incomingMessages.setText(savedInstanceState.getString("0"));
+        outgoingMessagesTV.setText(savedInstanceState.getString("1"));
     }
 
     //for importing the menu into the main page
@@ -294,16 +306,53 @@ public class Bluetooth extends AppCompatActivity{
             case R.id.bluetooth:
                 break;
             case R.id.map:
-                Intent intent1 = new Intent(Bluetooth.this, MazeActivity.class);
+                Intent intent1 = new Intent(this, MazeActivity.class);
                 startActivity(intent1);
+                break;
+            case R.id.calib:
+                if(mBTDevice!= null){
+                    String explore = "+A1:A2:L90:A1:A2;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+                }
+                else{
+                    Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.settings:
                 Intent intentSet= new Intent(Bluetooth.this,Settings.class);
                 startActivity(intentSet);
                 break;
+            case R.id.p:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+A1:A2:L90:A1:A2:P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+                }
+                else{
+                    Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.justp:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+                }
+                else{
+                    Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+   /* public void onPause(){
+        super.onPause();
+    }
+    public void onResume(){
+        super.onResume();
+    }*/
 
     /* create method for starting connection, remember the connection will fail and app will crash if you havent paired first*/
     public void startConnection(){
@@ -321,7 +370,13 @@ public class Bluetooth extends AppCompatActivity{
             Toast.makeText(Bluetooth.this,"Please connect to a device first! ", Toast.LENGTH_SHORT).show();
         }
         Log.d(TAG, "startBTConnection: Initializing RFCOM Bluetooth Connection. ");
-        mBluetoothConnection.startClient(device,uuid);
+        try{
+            mBluetoothConnection.startClient(device,uuid);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+
     }
 
     // a broadcast receiver to handle incoming messages
@@ -331,8 +386,6 @@ public class Bluetooth extends AppCompatActivity{
             String text = intent.getStringExtra("theMessage");
 
             messages.append(text + "\n");
-
-
 
             incomingMessages.setText(messages);
 
@@ -526,7 +579,10 @@ public class Bluetooth extends AppCompatActivity{
                 BluetoothDevice device2 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device2.getName();
                 Toast.makeText(Bluetooth.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
-                startBTConnection(device2, MY_UUID_INSECURE);
+
+                //mBluetoothConnection = new BluetoothConnectionService(Bluetooth.this);
+                //mBluetoothConnection.startClient(device2, MY_UUID_INSECURE);
+                //startBTConnection(device2, MY_UUID_INSECURE);
             }
         }
     };
@@ -535,10 +591,42 @@ public class Bluetooth extends AppCompatActivity{
     protected void onDestroy() {
         Log.d(TAG, "onDestroy: called.");
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiver1);
-        unregisterReceiver(mBroadcastReceiver2);
-        unregisterReceiver(mBroadcastReceiver3);
-        unregisterReceiver(mBroadcastReceiver4);
+        try{
+            unregisterReceiver(mBroadcastReceiver1);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver1");
+        }
+        try{
+            unregisterReceiver(mBroadcastReceiver2);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver2");
+        }
+        try{
+            unregisterReceiver(mBroadcastReceiver3);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver3");
+        }
+        try{
+            unregisterReceiver(mBroadcastReceiver4);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver4");
+        }
+        try{
+            unregisterReceiver(mBroadcastReceiver5);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver5");
+        }
+        try{
+            unregisterReceiver(mReceiver);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mReceiver");
+        }
 
     }
 
@@ -572,7 +660,7 @@ public class Bluetooth extends AppCompatActivity{
 
             //a filter that intercepts the changes in the bluetooth status
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiver1, BTIntent); //the broadcast receiver will catch the state change of bluetooth
+            this.registerReceiver(mBroadcastReceiver1, BTIntent); //the broadcast receiver will catch the state change of bluetooth
         }
         //when the bluetooth is enabled, we will disable the bluetooth
         if(mBluetoothAdapter.isEnabled()){
@@ -586,7 +674,7 @@ public class Bluetooth extends AppCompatActivity{
             noDevicesTV.setVisibility(View.GONE);
             //a filter that intercepts the changes in the bluetooth status
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiver1, BTIntent);
+            this.registerReceiver(mBroadcastReceiver1, BTIntent);
         }
 
 
@@ -602,7 +690,7 @@ public class Bluetooth extends AppCompatActivity{
         startActivity(discoverableIntent);
 
         IntentFilter intentFilter = new IntentFilter(mBluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
-        registerReceiver(mBroadcastReceiver2,intentFilter);
+        this.registerReceiver(mBroadcastReceiver2,intentFilter);
     }
 
     // for Button : btnFindUnpairedDevices
@@ -619,14 +707,14 @@ public class Bluetooth extends AppCompatActivity{
                 mBluetoothAdapter.startDiscovery();
                 Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+                this.registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
 
             if(!mBluetoothAdapter.isDiscovering()){
                 Toast.makeText(Bluetooth.this, "Start Discovery", Toast.LENGTH_SHORT).show();
                 mBluetoothAdapter.startDiscovery();
                 IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
+                this.registerReceiver(mBroadcastReceiver3,discoverDevicesIntent);
             }
         }
         else{

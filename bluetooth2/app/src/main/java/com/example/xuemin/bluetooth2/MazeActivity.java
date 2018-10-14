@@ -2,6 +2,7 @@ package com.example.xuemin.bluetooth2;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     TextView explorationreceiveTV;
     TextView p1String;
     TextView p2String;
+    private static Toast toast;
     public static TextView arena;
     TextView startX;
     TextView startY;
@@ -189,15 +191,67 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         String msg = " ";
         switch (item.getItemId()) {
             case R.id.bluetooth:
-                finish();
-               // Intent intent = new Intent(this, Bluetooth.class);
-                //startActivity(intent);
-                break;
+                Intent intent = new Intent(this, Bluetooth.class);
+                startActivity(intent);
             case R.id.map:
                 break;
+            case R.id.calib:
+               if(Bluetooth.mBTDevice!= null){
+                   String explore = "+A1:A2:L90:A1:A2;";
+                   byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                   if(bluetoothConnectionService!=null){
+                       bluetoothConnectionService.write(bytes);
+                   }
+                   else{
+                       Bluetooth.mBluetoothConnection.write(bytes);
+                   }
+               }
+               else{
+                   toast =  Toast.makeText(this,"text",Toast.LENGTH_SHORT);
+                   toast.setText("Please connect to a device");
+                   toast.setDuration(Toast.LENGTH_SHORT);
+                   toast.show();
+               }
+               break;
             case R.id.settings:
                 Intent intentSet= new Intent(this,Settings.class);
                 startActivity(intentSet);
+                break;
+            case R.id.p:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+A1:A2:L90:A1:A2:P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(MazeActivity.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+            case R.id.justp:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(MazeActivity.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -205,9 +259,26 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
     public void explore(View view) {
         if(Bluetooth.mBTDevice != null){
-            String explore = "beginExplore";
+            /*String startpoint = "-STARTPOINT(2,2)";
+            byte[] start = startpoint.getBytes(Charset.defaultCharset());
+            Bluetooth.mBluetoothConnection.write(start);*/
+
+            String explore = "-beginExplore";
             byte[] bytes = explore.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(bluetoothConnectionService!=null){
+                bluetoothConnectionService.write(bytes);
+            }
+            else{
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
+            String p = "+P;";
+            byte[] bytes1 = p.getBytes(Charset.defaultCharset());
+            if(bluetoothConnectionService!=null){
+                bluetoothConnectionService.write(bytes1);
+            }
+            else{
+                Bluetooth.mBluetoothConnection.write(bytes1);
+            }
             stillExplore = true;
             startExploreTime = System.currentTimeMillis();
             timerHandlerExplore.postDelayed(timerRunnableExplore, 0);
@@ -215,7 +286,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             disableDirection();
         }
         else{
-            Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+            toast =  Toast.makeText(MazeActivity.this,"text",Toast.LENGTH_SHORT);
+            toast.setText("Please connect to a device");
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
         }
 
     }
@@ -241,11 +315,15 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     };
 
     public void fastest(View view) {
-
         if(Bluetooth.mBTDevice != null){
-            String fastest = "beginFastest";
+            String fastest = "-beginFastest";
             byte[] bytes = fastest.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(bluetoothConnectionService!=null){
+                bluetoothConnectionService.write(bytes);
+            }
+            else{
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
             stillFast = true;
             startFastTime = System.currentTimeMillis();
             timerHandlerFastest.postDelayed(timerRunnableFastest, 0);
@@ -253,7 +331,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             disableDirection();
         }
         else{
-            Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+            toast =  Toast.makeText(MazeActivity.this,"text",Toast.LENGTH_SHORT);
+            toast.setText("Please connect to a device");
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
@@ -301,9 +382,14 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 @Override
                 public void onClick(View view) {
 
-                    String update = "sendArena";
+                    String update = "-sendArena";
                     byte[] bytes = update.getBytes(Charset.defaultCharset());
-                    Bluetooth.mBluetoothConnection.write(bytes);
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
                     listenForUpdate = true;
                     if(storedMsg!=null){
                         pixelGridView.updateDemoRobotPos(storedMsg);
@@ -337,7 +423,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         String y_coordinates = y_coor.getText().toString();
 
         if(x_coordinates.equals("") || y_coordinates.equals("")){
-            Toast.makeText(this, "Please select waypoint first!", Toast.LENGTH_SHORT).show();
+            toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+            toast.setText("Please select waypoint first!");
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
         }
         else{
             if(Bluetooth.mBTDevice!=null){
@@ -347,14 +436,25 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                     String waypoint = "-SETWAYPOINT(" + x_coor.getText() + "," + y_coor.getText() + ")";
                     byte[] bytes = waypoint.getBytes(Charset.defaultCharset());
                     pixelGridView.invalidate();
-                    Bluetooth.mBluetoothConnection.write(bytes);
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
                 }
                 else{
-                    Toast.makeText(this, "Please connect to a device", Toast.LENGTH_SHORT).show();
+                    toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device!");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
             else{
-                Toast.makeText(this, "Please connect to a device", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Please connect to a device!");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
@@ -362,34 +462,52 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     public void setStartPoint(View view){
         String x_coordinates = x_coor.getText().toString();
         String y_coordinates = y_coor.getText().toString();
-
         if(x_coordinates.equals("") || y_coordinates.equals("")){
-            Toast.makeText(this, "Please select waypoint first!", Toast.LENGTH_SHORT).show();
+            x_coor.setText("2");
+            y_coor.setText("2");
         }
-        else{
-            if(Bluetooth.mBTDevice!=null) {
+
+        /*if(x_coordinates.equals("") || y_coordinates.equals("")){
+            Toast.makeText(this, "Please select waypoint first!", Toast.LENGTH_SHORT).show();
+        }*/
+
+        if(Bluetooth.mBTDevice!=null) {
                 if (Bluetooth.mBTDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
-                    String startpoint = "-STARTPOINT(" + x_coor.getText() + "," + y_coor.getText() + ")";
+                    String startpoint = "-STARTPOINT(" + x_coor.getText().toString() + "," + y_coor.getText().toString() + ")";
                     int x = Integer.valueOf(x_coor.getText().toString());
                     int y = Integer.valueOf(y_coor.getText().toString());
                     byte[] bytes = startpoint.getBytes(Charset.defaultCharset());
-                    Bluetooth.mBluetoothConnection.write(bytes);
-                    String robotPosition = y + "|" + x + "|" + "NORTH";
-                    pixelGridView.updateRobotPos(robotPosition);
-                    pixelGridView.invalidate();
-                    robot = new Robot(x,y,"NORTH");
-                    robot.setPosition(x,y);
-                    robot.setDirection("NORTH");
-                    //pixelGridView.setCellchecked(x,y);
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                    /* requested by algo to send 2,2
+                    //Log.d("test123",startpoint);
+                    //String robotPosition = y + "|" + x + "|" + "SOUTH";
+                    //pixelGridView.updateRobotPos(robotPosition);
+                    //pixelGridView.invalidate();
+                    //robot = new Robot(x,y,"SOUTH");
+                    //robot.setPosition(x,y);
+                    //robot.setDirection("SOUTH");
+                    //pixelGridView.setCellchecked(x,y);*/
                 }
                 else{
-                    Toast.makeText(this, "Please connect to a device", Toast.LENGTH_SHORT).show();
+                    toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device!");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
             else{
-                Toast.makeText(this, "Please connect to a device", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Please connect to a device!");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+
             }
-        }
+
     }
 
     public void tilt(View view) {
@@ -460,14 +578,24 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 robot.setDirection(grid[3]);
                 String  exploredMap = grid[4];
                 String obstacleMap = grid[5];
-                pixelGridView.updateRobotPos(position);
-                pixelGridView.updateArena(exploredMap,obstacleMap);
-                pixelGridView.invalidate();
-                p1String.setText(exploredMap);
-                p2String.setText(obstacleMap);
+                if(exploredMap.matches("^[0-9a-fA-F]+$") && obstacleMap.matches("^[0-9a-fA-F]+$")){
+                    pixelGridView.updateRobotPos(position);
+                    pixelGridView.updateArena(exploredMap,obstacleMap);
+                    pixelGridView.invalidate();
+                    p1String.setText(exploredMap);
+                    p2String.setText(obstacleMap);
+                }
+                else{
+                    toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                    toast.setText("Incorrect String format");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
                 }
             }
-            byte[] read = text.getBytes();
+
+            /* byte[] read = text.getBytes();
             String mpInfo = new String(read);
             if (mpInfo.contains("grid")){
                 if(isAutoUpdate==true || listenForUpdate==true) {
@@ -495,11 +623,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 else{
                     storedMsg=mpInfo;
                 }
-            }
-            if(mpInfo.contains("arrowPosition")) {
+            }*/
+            if(text.contains("arrowPosition")) {
                 if (isAutoUpdate == true || listenForUpdate == true) {
                     pixelGridView.arrowpost = true;
-                    pixelGridView.getArrowPosition(mpInfo);
+                    pixelGridView.getArrowPosition(text);
                     pixelGridView.invalidate();
                     listenForUpdate=false;
                 }
@@ -534,21 +662,51 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 String deviceName = device.getName();
                 Bluetooth.mBTDevice = device;
                 btConnectedTVList.setText(device.getName());
-                Toast.makeText(MazeActivity.this, "BT Connected to: "+ deviceName, Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("BT Connected to: "+ deviceName);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+                try{
+                    bluetoothConnectionService = new BluetoothConnectionService(MazeActivity.this);
+                    bluetoothConnectionService.startClient(device, MY_UUID_INSECURE);
+
+                    //Bluetooth.mBluetoothConnection = bluetoothConnectionService;
+                }
+                catch(Exception e){
+                    Log.d(TAG, "MazeActivity Reconnect " + e.getMessage());
+                }
 
             }
             else if(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)){
                 BluetoothDevice device1 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device1.getName();
-                Toast.makeText(MazeActivity.this, "BT about to disconnected from: " + deviceName, Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("BT about to disconnected from:"+ deviceName);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+
             }
             else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 BluetoothDevice device2 = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device2.getName();
-                Toast.makeText(MazeActivity.this, "BT is disconnected: "+ deviceName, Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("BT is disconnected:"+ deviceName);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
                 Bluetooth.mBTDevice = null;
                 btConnectedTVList.setText("Not Connected");
-                Bluetooth.mBluetoothConnection.startClient(device2,MY_UUID_INSECURE);
+                Bluetooth.mBluetoothConnection = null;
+                /*try{
+                    bluetoothConnectionService = new BluetoothConnectionService(MazeActivity.this);
+                    bluetoothConnectionService.startClient(device2, MY_UUID_INSECURE);
+
+                    //Bluetooth.mBluetoothConnection = bluetoothConnectionService;
+                }
+                catch(Exception e){
+                    Log.d(TAG, "MazeActivity Reconnect " + e.getMessage());
+                }*/
+
+
             }
         }
     };
@@ -557,8 +715,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             if(Bluetooth.mBTDevice != null){
                 //String left = "tl";
                 String left = "+L90";
-                byte[] bytes = left.getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
+                byte[] bytes = left.getBytes(Charset.defaultCharset());if(bluetoothConnectionService!=null){
+                    bluetoothConnectionService.write(bytes);
+                }
+                else{
+                    Bluetooth.mBluetoothConnection.write(bytes);
+                }
                 String position = robot.getPosition();
                 String direction = robot.getDirection();
                 String grid[] = position.split(",");
@@ -567,7 +729,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 turnLeftMovement(x,y,direction);
             }
             else{
-                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Please connect to a device first!");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
 
         }
@@ -577,8 +742,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             if(Bluetooth.mBTDevice != null){
                 //String forward = "f";
                 String forward = "+F1";
-                byte[] bytes = forward.getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
+                byte[] bytes = forward.getBytes(Charset.defaultCharset());if(bluetoothConnectionService!=null){
+                    bluetoothConnectionService.write(bytes);
+                }
+                else{
+                    Bluetooth.mBluetoothConnection.write(bytes);
+                }
                 String position = robot.getPosition();
                 String direction = robot.getDirection();
                 String grid[] = position.split(",");
@@ -587,7 +756,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 forwardMovement(x,y,direction);
             }
             else {
-                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Please connect to a device first!");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     public void turnRight(View view) {
@@ -595,7 +767,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             //String right = "tr";
             String right = "+R90";
             byte[] bytes = right.getBytes(Charset.defaultCharset());
-            Bluetooth.mBluetoothConnection.write(bytes);
+            if(bluetoothConnectionService!=null){
+                bluetoothConnectionService.write(bytes);
+            }
+            else{
+                Bluetooth.mBluetoothConnection.write(bytes);
+            }
             String position = robot.getPosition();
             String direction = robot.getDirection();
             String grid[] = position.split(",");
@@ -605,7 +782,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
         }
         else {
-            Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+            toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+            toast.setText("Please connect to a device first!");
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
@@ -616,7 +796,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 //String reverse = "r";
                 String reverse = "+B1";
                 byte[] bytes = reverse.getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
+                if(bluetoothConnectionService!=null){
+                    bluetoothConnectionService.write(bytes);
+                }
+                else{
+                    Bluetooth.mBluetoothConnection.write(bytes);
+                }
                 String position = robot.getPosition();
                 String direction = robot.getDirection();
                 String grid[] = position.split(",");
@@ -626,7 +811,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
             }
             else {
-                Toast.makeText(MazeActivity.this, "Please connect to a device first! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Please connect to a device first!");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
@@ -641,7 +829,11 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
+
             }
         }
         if(direction == "EAST"){
@@ -654,7 +846,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
@@ -668,7 +863,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "SOUTH"){
@@ -681,7 +879,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
@@ -698,7 +899,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "EAST"){
@@ -710,7 +914,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
@@ -723,7 +930,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "SOUTH"){
@@ -735,7 +945,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
@@ -751,7 +964,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "EAST"){
@@ -763,7 +979,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
@@ -776,7 +995,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "SOUTH"){
@@ -788,7 +1010,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
@@ -804,7 +1029,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "EAST"){
@@ -817,7 +1045,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
 
@@ -831,7 +1062,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
         if(direction == "SOUTH"){
@@ -844,7 +1078,10 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 pixelGridView.invalidate();
             }
             else{
-                Toast.makeText(MazeActivity.this, "Invalid Move! ", Toast.LENGTH_SHORT).show();
+                toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                toast.setText("Invalid Move! ");
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }
@@ -883,11 +1120,20 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int robotx = Integer.parseInt(grid[0]);
                         int roboty = Integer.parseInt(grid[1]);
                         turnRightMovement(robotx,roboty,direction);
-                        Toast.makeText(MazeActivity.this, "Command is : Move Right", Toast.LENGTH_SHORT).show();
+                        toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                        toast.setText("Command is : Move Right");
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
+
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+R90";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            Bluetooth.mBluetoothConnection.write(bytes);
+                            if(bluetoothConnectionService!=null){
+                                bluetoothConnectionService.write(bytes);
+                            }
+                            else{
+                                Bluetooth.mBluetoothConnection.write(bytes);
+                            }
                         }
 
                     }
@@ -898,11 +1144,19 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int robotx = Integer.parseInt(grid[0]);
                         int roboty = Integer.parseInt(grid[1]);
                         turnLeftMovement(robotx,roboty,direction);
-                        Toast.makeText(MazeActivity.this, "Command is : Move Left", Toast.LENGTH_SHORT).show();
+                        toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                        toast.setText("Command is : Move Left");
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+L90";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            Bluetooth.mBluetoothConnection.write(bytes);
+                            if(bluetoothConnectionService!=null){
+                                bluetoothConnectionService.write(bytes);
+                            }
+                            else{
+                                Bluetooth.mBluetoothConnection.write(bytes);
+                            }
                         }
                         //sendMessage(message);
                         //Toast.makeText(getActivity(), "Command is : " + message, Toast.LENGTH_SHORT).show();
@@ -915,11 +1169,19 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int robotx = Integer.parseInt(grid[0]);
                         int roboty = Integer.parseInt(grid[1]);
                         forwardMovement(robotx,roboty,direction);
-                        Toast.makeText(MazeActivity.this, "Command is : Move Up", Toast.LENGTH_SHORT).show();
+                        toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                        toast.setText("Command is : Move Up");
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+F1";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            Bluetooth.mBluetoothConnection.write(bytes);
+                            if(bluetoothConnectionService!=null){
+                                bluetoothConnectionService.write(bytes);
+                            }
+                            else{
+                                Bluetooth.mBluetoothConnection.write(bytes);
+                            }
                         }
                     }
                     if (y < -0.7) {
@@ -929,11 +1191,19 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         int robotx = Integer.parseInt(grid[0]);
                         int roboty = Integer.parseInt(grid[1]);
                         reverseMovement(robotx,roboty,direction);
-                        Toast.makeText(MazeActivity.this, "Command is : Move Down", Toast.LENGTH_SHORT).show();
+                        toast =  Toast.makeText(MazeActivity.this,"",Toast.LENGTH_SHORT);
+                        toast.setText("Command is : Move Down");
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.show();
                        if (Bluetooth.mBTDevice  !=null){
                            String update = "+B1";
                            byte[] bytes = update.getBytes(Charset.defaultCharset());
-                           Bluetooth.mBluetoothConnection.write(bytes);
+                           if(bluetoothConnectionService!=null){
+                               bluetoothConnectionService.write(bytes);
+                           }
+                           else{
+                               Bluetooth.mBluetoothConnection.write(bytes);
+                           }
                         }
 
                     }
@@ -964,6 +1234,29 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {
+    }
+
+    //to make the broadcastreceiver close when the app got destroyed or hanged
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: called.");
+        super.onDestroy();
+        try{
+            unregisterReceiver(mBroadcastReceiver5);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mBroadcastReceiver5");
+        }
+        try{
+            unregisterReceiver(mReceiver);
+        }
+        catch(Exception e){
+            Log.e(TAG, e.getMessage()+"mReceiver");
+        }
+
+        if(toast != null){
+            toast.cancel();
+        }
+        finish();
     }
 
 }

@@ -34,7 +34,7 @@ public class MapDecoder {
 
     public void clearMapArray(){
         mapArray = new int[300];
-        robotPosStr = "1,1,180";
+        robotPosStr = "1,1,0";
         exploredMapStr = "0000000000000000000000000000000000000000000000000000000000000000000000000000";
         mapObjectStr = "0";
     }
