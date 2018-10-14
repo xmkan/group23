@@ -73,6 +73,23 @@
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/sentTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Sent Text"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/sentTextTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
 
             <TextView
                 android:id="@+id/fastestTV"
@@ -117,14 +134,18 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:ems="10"
-                    android:text="X Coor" />
+                    android:text="X Coor"
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/darker_gray"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:ems="10"
-                    android:text="Y Coor" />
+                    android:text="Y Coor"
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/darker_gray"/>
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +176,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="setStartPoint"
-                android:text="Start" />
+                android:text="Start"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/tiltBtn"
@@ -165,17 +187,51 @@
                 android:text="Tlit On"
                 android:visibility="gone"/>
 
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter Text Here" />
+
+            <Button
+                android:id="@+id/btnSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editText"
+                android:text="SEND" />
+
+            <TextView
+                android:id="@+id/Part1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Part 1 String"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
             <TextView
                 android:id="@+id/p1String"
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
+                android:layout_height="88dp"
                 android:text="P1" />
+
+            <TextView
+                android:id="@+id/Part2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Part 2 String"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/p2String"
                 android:layout_width="match_parent"
                 android:layout_height="88dp"
-                android:text="P2T" />
+                android:text="P2" />
+
+
+
 
         </LinearLayout>
 
@@ -187,26 +243,26 @@
 
         <Button
             android:id="@+id/setwaypointBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:onClick="setWayPoint"
             android:text="SET WAYPOINT" />
 
         <Button
             android:id="@+id/automanualBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/setwaypointBtn"
-            android:text="AUTO"
-            android:onClick="toggleAutoManual"/>
+            android:onClick="toggleAutoManual"
+            android:text="AUTO" />
 
         <Button
             android:id="@+id/updateBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/automanualBtn"
-            android:text="UPDATE"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:text="UPDATE" />
 
         <ImageButton
             android:id="@+id/leftBtn"
@@ -254,7 +310,7 @@
 
         <Button
             android:id="@+id/explorationBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="explore"
@@ -262,7 +318,7 @@
 
         <Button
             android:id="@+id/fastestBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/explorationBtn"
@@ -271,12 +327,13 @@
 
         <Button
             android:id="@+id/clearMapBtn"
-            android:layout_width="170dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/fastestBtn"
             android:text="CLEAR MAP"
             android:onClick="clear"/>
+
 
 
     </RelativeLayout>
