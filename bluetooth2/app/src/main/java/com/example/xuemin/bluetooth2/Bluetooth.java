@@ -343,6 +343,18 @@ public class Bluetooth extends AppCompatActivity{
                     Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.stop:
+
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+S";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+                }
+                else{
+                    Toast.makeText(this,"Please connect to a device",Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

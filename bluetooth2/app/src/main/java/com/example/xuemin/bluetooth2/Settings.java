@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.nio.charset.Charset;
 
@@ -33,6 +34,7 @@ public class Settings extends AppCompatActivity {
     public static final String configuration = "configuration";
     public static final String function1Text = "function1Key";
     public static final String function2Text = "function2Key";
+    private static Toast toast;
 
 
     @Override
@@ -49,9 +51,6 @@ public class Settings extends AppCompatActivity {
         //Initiate Bluetooth
         //initializing bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-
-
 
         sharedpreferences = getSharedPreferences(configuration,
                 Context.MODE_PRIVATE);
@@ -74,10 +73,23 @@ public class Settings extends AppCompatActivity {
                     function1new.setText(sharedpreferences.getString(function1Text, ""));
                 }
                 byte[] bytes = function1new.getText().toString().getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
+
+                if(Bluetooth.mBTDevice!= null){
+
+                    if(MazeActivity.bluetoothConnectionService!=null){
+                        MazeActivity.bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(Settings.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 //display out going messages
-
-
             }
         });
 
@@ -93,7 +105,21 @@ public class Settings extends AppCompatActivity {
                     function2new.setText(sharedpreferences.getString(function2Text, ""));
                 }
                 byte[] bytes = function2new.getText().toString().getBytes(Charset.defaultCharset());
-                Bluetooth.mBluetoothConnection.write(bytes);
+                if(Bluetooth.mBTDevice!= null){
+
+                    if(MazeActivity.bluetoothConnectionService!=null){
+                        MazeActivity.bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(Settings.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 //display out going messages
 
 
@@ -121,19 +147,93 @@ public class Settings extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        String msg = " ";
         switch (item.getItemId()) {
             case R.id.bluetooth:
-                finish();
-                break;
+                Intent intent = new Intent(this, Bluetooth.class);
+                startActivity(intent);
             case R.id.map:
-                Intent intentSet= new Intent(this, MazeActivity.class);
-                startActivity(intentSet);
+                Intent intent1 = new Intent(this, MazeActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.calib:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+A1:A2:L90:A1:A2;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 break;
             case R.id.settings:
-                Intent intentSet2= new Intent(this, Settings.class);
-                startActivity(intentSet2);
+                Intent intentSet= new Intent(this,Settings.class);
+                startActivity(intentSet);
                 break;
+            case R.id.p:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+A1:A2:L90:A1:A2:P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(Settings.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+            case R.id.justp:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+P;";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(Settings.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+            case R.id.reset:
+                break;
+            case R.id.stop:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+S";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(Settings.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

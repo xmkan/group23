@@ -38,7 +38,7 @@ import java.util.UUID;
 
 public class MazeActivity extends AppCompatActivity implements SensorEventListener {
     private static final String TAG = "MazeActivity";
-    BluetoothConnectionService bluetoothConnectionService;
+    public static BluetoothConnectionService bluetoothConnectionService;
     android.support.v7.widget.Toolbar toolbar;
     ImageButton upButton;
     ImageButton downBtn;
@@ -293,6 +293,28 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 stillFast=false;
                 fastestBtn.setEnabled(true);
                 fastestreceiveTV.setText("Min : Seconds ");
+                break;
+            case R.id.stop:
+                if(Bluetooth.mBTDevice!= null){
+                    String explore = "+S";
+                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
+                    if(bluetoothConnectionService!=null){
+                        bluetoothConnectionService.write(bytes);
+                        sentTextTV.setText("+S");
+                    }
+                    else{
+                        Bluetooth.mBluetoothConnection.write(bytes);
+                        sentTextTV.setText("+S");
+                    }
+                }
+                else{
+                    toast =  Toast.makeText(MazeActivity.this,"text",Toast.LENGTH_SHORT);
+                    toast.setText("Please connect to a device");
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

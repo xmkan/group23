@@ -14,6 +14,11 @@
         android:orderInCategory="100"
         app:showAsAction="always" />
 
+    <item android:id="@+id/stop"
+        android:title="STOP"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+
     <item android:id="@+id/justp"
         android:title="P"
         android:orderInCategory="100"
@@ -35,7 +40,7 @@
         app:showAsAction="never" />
 
     <item android:id="@+id/p"
-        android:title="Calibp"
+        android:title="CALIBP"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
