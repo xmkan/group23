@@ -76,8 +76,8 @@ public class Settings extends AppCompatActivity {
 
                 if(Bluetooth.mBTDevice!= null){
 
-                    if(MazeActivity.bluetoothConnectionService!=null){
-                        MazeActivity.bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);
@@ -107,8 +107,8 @@ public class Settings extends AppCompatActivity {
                 byte[] bytes = function2new.getText().toString().getBytes(Charset.defaultCharset());
                 if(Bluetooth.mBTDevice!= null){
 
-                    if(MazeActivity.bluetoothConnectionService!=null){
-                        MazeActivity.bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);
@@ -159,8 +159,8 @@ public class Settings extends AppCompatActivity {
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+A1:A2:L90:A1:A2;";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);
@@ -181,8 +181,8 @@ public class Settings extends AppCompatActivity {
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+A1:A2:L90:A1:A2:P;";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);
@@ -199,8 +199,8 @@ public class Settings extends AppCompatActivity {
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+P;";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);
@@ -219,8 +219,8 @@ public class Settings extends AppCompatActivity {
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+S";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(MazeActivity.bluetoothConnectionServices!=null){
+                        MazeActivity.bluetoothConnectionServices.write(bytes);
                     }
                     else{
                         Bluetooth.mBluetoothConnection.write(bytes);

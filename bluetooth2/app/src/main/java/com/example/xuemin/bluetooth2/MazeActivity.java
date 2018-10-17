@@ -38,7 +38,7 @@ import java.util.UUID;
 
 public class MazeActivity extends AppCompatActivity implements SensorEventListener {
     private static final String TAG = "MazeActivity";
-    public static BluetoothConnectionService bluetoothConnectionService;
+    public static BluetoothConnectionService bluetoothConnectionServices;
     android.support.v7.widget.Toolbar toolbar;
     ImageButton upButton;
     ImageButton downBtn;
@@ -190,8 +190,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                     sentTextTV.setText(text.toUpperCase());
                     etSend.setText("");
                 }
-                else if(bluetoothConnectionService!=null){
-                    bluetoothConnectionService.write(bytes);
+                else if(bluetoothConnectionServices!=null){
+                    bluetoothConnectionServices.write(bytes);
                     sentTextTV.setText(text.toUpperCase());
                     etSend.setText("");
                 }
@@ -225,8 +225,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                if(Bluetooth.mBTDevice!= null){
                    String explore = "+A1:A2:L90:A1:A2;";
                    byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                   if(bluetoothConnectionService!=null){
-                       bluetoothConnectionService.write(bytes);
+                   if(bluetoothConnectionServices!=null){
+                       bluetoothConnectionServices.write(bytes);
                        sentTextTV.setText("CALIB");
                    }
                    else{
@@ -249,8 +249,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+A1:A2:L90:A1:A2:P;";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText("CALIBP");
                     }
                     else{
@@ -269,8 +269,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+P;";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText("+P;");
                     }
                     else{
@@ -298,8 +298,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 if(Bluetooth.mBTDevice!= null){
                     String explore = "+S";
                     byte[] bytes = explore.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText("+S");
                     }
                     else{
@@ -327,8 +327,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
             String explore = "-beginExplore\n";
             byte[] bytes = explore.getBytes(Charset.defaultCharset());
-            if(bluetoothConnectionService!=null){
-                bluetoothConnectionService.write(bytes);
+            if(bluetoothConnectionServices!=null){
+                bluetoothConnectionServices.write(bytes);
                 sentTextTV.setText("BEGIN EXPLORE");
             }
             else{
@@ -337,8 +337,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             }
             String p = "+P;";
             byte[] bytes1 = p.getBytes(Charset.defaultCharset());
-            if(bluetoothConnectionService!=null){
-                bluetoothConnectionService.write(bytes1);
+            if(bluetoothConnectionServices!=null){
+                bluetoothConnectionServices.write(bytes1);
                 sentTextTV.setText("+P;");
             }
             else{
@@ -384,8 +384,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         if(Bluetooth.mBTDevice != null){
             String fastest = "-beginFastest";
             byte[] bytes = fastest.getBytes(Charset.defaultCharset());
-            if(bluetoothConnectionService!=null){
-                bluetoothConnectionService.write(bytes);
+            if(bluetoothConnectionServices!=null){
+                bluetoothConnectionServices.write(bytes);
                 sentTextTV.setText("BEGIN FASTEST");
             }
             else{
@@ -452,8 +452,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
                     String update = "-sendArena";
                     byte[] bytes = update.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText("ARENA INFO");
                     }
                     else{
@@ -506,8 +506,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                     String waypoint = "-SETWAYPOINT(" + x_coor.getText() + "," + y_coor.getText() + ")";
                     byte[] bytes = waypoint.getBytes(Charset.defaultCharset());
                     pixelGridView.invalidate();
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText(waypoint);
                     }
                     else{
@@ -549,8 +549,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                     int x = Integer.valueOf(x_coor.getText().toString());
                     int y = Integer.valueOf(y_coor.getText().toString());
                     byte[] bytes = startpoint.getBytes(Charset.defaultCharset());
-                    if(bluetoothConnectionService!=null){
-                        bluetoothConnectionService.write(bytes);
+                    if(bluetoothConnectionServices!=null){
+                        bluetoothConnectionServices.write(bytes);
                         sentTextTV.setText(startpoint);
                     }
                     else{
@@ -740,15 +740,15 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 toast.setText("BT Connected to: "+ deviceName);
                 toast.setDuration(Toast.LENGTH_SHORT);
                 toast.show();
-                try{
-                    bluetoothConnectionService = new BluetoothConnectionService(MazeActivity.this);
-                    bluetoothConnectionService.startClient(device, MY_UUID_INSECURE);
+                /*try{
 
-                    //Bluetooth.mBluetoothConnection = bluetoothConnectionService;
+                    bluetoothConnectionServices = new BluetoothConnectionService(MazeActivity.this);
+                    bluetoothConnectionServices.startClient(device, MY_UUID_INSECURE);
+                    //Bluetooth.mBluetoothConnection = bluetoothConnectionServices;
                 }
                 catch(Exception e){
                     Log.d(TAG, "MazeActivity Reconnect " + e.getMessage());
-                }
+                }*/
 
             }
             else if(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED.equals(action)){
@@ -770,12 +770,24 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 Bluetooth.mBTDevice = null;
                 btConnectedTVList.setText("Not Connected");
                 Bluetooth.mBluetoothConnection = null;
-                bluetoothConnectionService = null;
-                /*try{
-                    bluetoothConnectionService = new BluetoothConnectionService(MazeActivity.this);
-                    bluetoothConnectionService.startClient(device2, MY_UUID_INSECURE);
+                bluetoothConnectionServices = null;
+                //device2.getAddress().equals("14:AB:C5:8C:E4:F1")||
+                if(device2.getAddress().equals("B8:27:EB:58:A1:96")){
+                    try{
+                        bluetoothConnectionServices = new BluetoothConnectionService(MazeActivity.this);
+                        bluetoothConnectionServices.startClient(device2, MY_UUID_INSECURE);
 
-                    //Bluetooth.mBluetoothConnection = bluetoothConnectionService;
+                        //Bluetooth.mBluetoothConnection = bluetoothConnectionServices;
+                    }
+                    catch(Exception e){
+                        Log.d(TAG, "MazeActivity Reconnect " + e.getMessage());
+                    }
+                }
+                /*try{
+                    bluetoothConnectionServices = new BluetoothConnectionService(MazeActivity.this);
+                    bluetoothConnectionServices.startClient(device2, MY_UUID_INSECURE);
+
+                    //Bluetooth.mBluetoothConnection = bluetoothConnectionServices;
                 }
                 catch(Exception e){
                     Log.d(TAG, "MazeActivity Reconnect " + e.getMessage());
@@ -790,8 +802,9 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             if(Bluetooth.mBTDevice != null){
                 //String left = "tl";
                 String left = "+L90";
-                byte[] bytes = left.getBytes(Charset.defaultCharset());if(bluetoothConnectionService!=null){
-                    bluetoothConnectionService.write(bytes);
+                byte[] bytes = left.getBytes(Charset.defaultCharset());
+                if(bluetoothConnectionServices!=null){
+                    bluetoothConnectionServices.write(bytes);
                     String turnleft = "Turn left";
                     sentTextTV.setText(turnleft.toUpperCase());
                 }
@@ -821,8 +834,9 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             if(Bluetooth.mBTDevice != null){
                 //String forward = "f";
                 String forward = "+F1";
-                byte[] bytes = forward.getBytes(Charset.defaultCharset());if(bluetoothConnectionService!=null){
-                    bluetoothConnectionService.write(bytes);
+                byte[] bytes = forward.getBytes(Charset.defaultCharset());
+                if(bluetoothConnectionServices!=null){
+                    bluetoothConnectionServices.write(bytes);
                     String forward1 = "Moving Forward";
                     sentTextTV.setText(forward1.toUpperCase());
                 }
@@ -850,8 +864,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             //String right = "tr";
             String right = "+R90";
             byte[] bytes = right.getBytes(Charset.defaultCharset());
-            if(bluetoothConnectionService!=null){
-                bluetoothConnectionService.write(bytes);
+            if(bluetoothConnectionServices!=null){
+                bluetoothConnectionServices.write(bytes);
                 String turnright = "Turn Right";
                 sentTextTV.setText(turnright.toUpperCase());
             }
@@ -883,8 +897,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 //String reverse = "r";
                 String reverse = "+B1";
                 byte[] bytes = reverse.getBytes(Charset.defaultCharset());
-                if(bluetoothConnectionService!=null){
-                    bluetoothConnectionService.write(bytes);
+                if(bluetoothConnectionServices!=null){
+                    bluetoothConnectionServices.write(bytes);
                     String reverse1 = "Reversing";
                     sentTextTV.setText(reverse1.toUpperCase());
                 }
@@ -1219,8 +1233,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+R90";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            if(bluetoothConnectionService!=null){
-                                bluetoothConnectionService.write(bytes);
+                            if(bluetoothConnectionServices!=null){
+                                bluetoothConnectionServices.write(bytes);
                             }
                             else{
                                 Bluetooth.mBluetoothConnection.write(bytes);
@@ -1242,8 +1256,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+L90";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            if(bluetoothConnectionService!=null){
-                                bluetoothConnectionService.write(bytes);
+                            if(bluetoothConnectionServices!=null){
+                                bluetoothConnectionServices.write(bytes);
                             }
                             else{
                                 Bluetooth.mBluetoothConnection.write(bytes);
@@ -1267,8 +1281,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                         if (Bluetooth.mBTDevice  !=null) {
                             String update = "+F1";
                             byte[] bytes = update.getBytes(Charset.defaultCharset());
-                            if(bluetoothConnectionService!=null){
-                                bluetoothConnectionService.write(bytes);
+                            if(bluetoothConnectionServices!=null){
+                                bluetoothConnectionServices.write(bytes);
                             }
                             else{
                                 Bluetooth.mBluetoothConnection.write(bytes);
@@ -1289,8 +1303,8 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                        if (Bluetooth.mBTDevice  !=null){
                            String update = "+B1";
                            byte[] bytes = update.getBytes(Charset.defaultCharset());
-                           if(bluetoothConnectionService!=null){
-                               bluetoothConnectionService.write(bytes);
+                           if(bluetoothConnectionServices!=null){
+                               bluetoothConnectionServices.write(bytes);
                            }
                            else{
                                Bluetooth.mBluetoothConnection.write(bytes);
@@ -1346,6 +1360,9 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
 
         if(toast != null){
             toast.cancel();
+        }
+        if(mBluetoothAdapter!=null){
+            mBluetoothAdapter.cancelDiscovery();
         }
         finish();
     }

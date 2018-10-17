@@ -176,7 +176,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/commandLogTV"
-        android:hint="Enter Text Here" />
+        android:hint="Enter Text Here"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btnSend"
@@ -184,6 +185,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/editText"
         android:layout_toEndOf="@+id/editText"
-        android:text="SEND" />
+        android:text="SEND"
+        android:visibility="gone"/>
 
 </RelativeLayout>

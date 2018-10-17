@@ -283,7 +283,7 @@ public class BluetoothConnectionService {
 
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading inputStream." + e.getMessage());
-                    cancel();
+                    //cancel();
                     break;
                 }
             }
