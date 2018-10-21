@@ -1362,7 +1362,12 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
             toast.cancel();
         }
         if(mBluetoothAdapter!=null){
-            mBluetoothAdapter.cancelDiscovery();
+            try{
+                mBluetoothAdapter.cancelDiscovery();
+            }
+            catch(Exception e){
+                Log.e(TAG, e.getMessage());
+            }
         }
         finish();
     }
