@@ -229,6 +229,21 @@
                 android:layout_height="90dp"
                 android:text="P2" />
 
+            <TextView
+                android:id="@+id/arrowString"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:text="Arrow String"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/aString"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:text="Arrow" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -63,6 +63,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
     TextView explorationreceiveTV;
     TextView p1String;
     TextView p2String;
+    TextView aString;
     TextView sentTv;
     TextView sentTextTV;
     private static Toast toast;
@@ -138,6 +139,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         explorationreceiveTV = (TextView) findViewById(R.id.explorationreceiveTV);
         p1String = (TextView)findViewById(R.id.p1String);
         p2String = (TextView)findViewById(R.id.p2String);
+        aString = (TextView) findViewById(R.id.aString);
         sentTv = (TextView) findViewById(R.id.sentTv);
         sentTextTV = (TextView) findViewById(R.id.sentTextTV);
 
@@ -702,6 +704,7 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
                 if (isAutoUpdate == true || listenForUpdate == true) {
                     pixelGridView.arrowpost = true;
                     pixelGridView.getArrowPosition(text);
+                    aString.setText(text);
                     pixelGridView.invalidate();
                     listenForUpdate=false;
                 }
