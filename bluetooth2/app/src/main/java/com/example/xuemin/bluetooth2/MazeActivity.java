@@ -386,12 +386,16 @@ public class MazeActivity extends AppCompatActivity implements SensorEventListen
         if(Bluetooth.mBTDevice != null){
             String fastest = "-beginFastest";
             byte[] bytes = fastest.getBytes(Charset.defaultCharset());
+            String fastest1 = "+S";
+            byte[] bytes1 = fastest1.getBytes(Charset.defaultCharset());
             if(bluetoothConnectionServices!=null){
                 bluetoothConnectionServices.write(bytes);
+                bluetoothConnectionServices.write(bytes1);
                 sentTextTV.setText("BEGIN FASTEST");
             }
             else{
                 Bluetooth.mBluetoothConnection.write(bytes);
+                Bluetooth.mBluetoothConnection.write(bytes1);
                 sentTextTV.setText("BEGIN FASTEST");
             }
             stillFast = true;
